@@ -2,7 +2,7 @@
 [![Download](https://api.bintray.com/packages/wooodenleg/maven/TmiK/images/download.svg)](https://bintray.com/wooodenleg/maven/TmiK/_latestVersion)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/03cd61c9bd1f40a2baf416ae1c84ade6)](https://www.codacy.com/app/wooodenleg/TmiK?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=wooodenleg/TmiK&amp;utm_campaign=Badge_Grade)
 [![GitHub](https://img.shields.io/github/license/wooodenleg/TmiK.svg?color=blue)](https://github.com/wooodenleg/TmiK/blob/master/LICENSE)  
-####Twitch messaging in Kotlin
+#### Twitch messaging in Kotlin
 ##### Simple DSL for interacting with Twitch chat
 
 ## State
