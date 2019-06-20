@@ -75,9 +75,8 @@ kotlin {
 }
 
 bintray {
-    user = hasProperty("teamcity") ? teamcity['btUser'] : "N/A"
-    key = hasProperty("teamcity") ? teamcity['btKey'] : "N/A"
-    override = true
+    user = project.hasProperty('btUser') ? btUser : "N/A"
+    key = project.hasProperty('btKey') ? btKey : "N/A"
 
     pkg {
         repo = 'maven'

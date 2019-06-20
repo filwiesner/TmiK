@@ -51,8 +51,8 @@ repositories {
 }
 
 dependencies {
-    implementation "com.tmik:TmiK-jvm:0.0.2" // For JVM
+    implementation "com.tmik:TmiK-jvm:0.0.3" // For JVM
     // OR
-    implementation "com.tmik:TmiK-js:0.0.2" // For Kotlin/JS
+    implementation "com.tmik:TmiK-js:0.0.3" // For Kotlin/JS
 }
 ```
