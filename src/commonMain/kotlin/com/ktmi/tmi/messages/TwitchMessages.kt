@@ -10,6 +10,26 @@ sealed class TwitchMessage(
 //    val author: String = "tmi"
 ){ init { rawMessage.assertCommand(command) } }
 
+interface UserRelated {
+
+}
+
+/**
+ * Twitch message which is related to some channel and user
+ * This message can be: [UserStateMessage], [TextMessage] or [UserNoticeMessage]
+ */
+interface UserStateRelated {
+    val channel: String?
+    val badgeInfo: String?
+    val badges: Map<String, Int>?
+    val color: String?
+    val username: String? get() = displayName?.toLowerCase()
+    val displayName: String?
+    val isMod: Boolean
+}
+
+
+
 private val TwitchMessage._channel get() = rawMessage.channel
 private val TwitchMessage._username get() = rawMessage.author
 private val TwitchMessage._login get() = rawMessage.tags["login"]
@@ -65,16 +85,16 @@ class LeaveMessage(
 
 class UserStateMessage(
     rawMessage: RawMessage
-) : TwitchMessage(rawMessage, "USERSTATE") {
-    val channel get() = _channel
+) : TwitchMessage(rawMessage, "USERSTATE"), UserStateRelated {
+    override val channel get() = _channel
         ?: throw CorruptedMessageException(rawMessage, "channel not available")
-    val badgeInfo get() = _badgeInfo
-    val badges get() = _badges
-    val color get() = _color
-    val displayName get() = _displayName
+    override val badgeInfo get() = _badgeInfo
+    override val badges get() = _badges
+    override val color get() = _color
+    override val displayName get() = _displayName
     val emoteSets get() = _emoteSets
         ?: throw CorruptedMessageException(rawMessage, "emote sets are not available")
-    val isMod get() = _isMod
+    override val isMod get() = _isMod
 }
 
 class RoomStateMessage(
@@ -91,19 +111,19 @@ class RoomStateMessage(
 
 class TextMessage(
     rawMessage: RawMessage
-) : TwitchMessage(rawMessage, "PRIVMSG") {
-    val channel get() = _channel
+) : TwitchMessage(rawMessage, "PRIVMSG"), UserStateRelated {
+    override val channel get() = _channel
     ?: throw CorruptedMessageException(rawMessage, "channel not available")
-    val badgeInfo get() = _badgeInfo
-    val badges get() = _badges
+    override val badgeInfo get() = _badgeInfo
+    override val badges get() = _badges
     val bits get() = _bits
-    val color get() = _color
-    val username get() = _username
-    val displayName get() = _displayName
+    override val color get() = _color
+    override val username get() = _username
+    override val displayName get() = _displayName
     val emotes get() = _emotes
     val messageId get() = _id
         ?: throw CorruptedMessageException(rawMessage, "id is not available")
-    val isMod get() = _isMod
+    override val isMod get() = _isMod
     val timestamp get() = _timestamp
         ?: throw CorruptedMessageException(rawMessage, "timestamp is not available")
     val userId get() = _userId
@@ -163,20 +183,20 @@ class NoticeMessage(
  */
 class UserNoticeMessage(
     rawMessage: RawMessage
-) : TwitchMessage(rawMessage, "USERNOTICE") {
-    val channel get() = _channel
+) : TwitchMessage(rawMessage, "USERNOTICE"), UserStateRelated {
+    override val channel get() = _channel
         ?: throw CorruptedMessageException(rawMessage, "channel not available")
     val message get() = _text
-    val badgeInfo get() = _badgeInfo
-    val badges get() = _badges
-    val color get() = _color
-    val displayName get() = _displayName
+    override val badgeInfo get() = _badgeInfo
+    override val badges get() = _badges
+    override val color get() = _color
+    override val displayName get() = _displayName
     val emotes get() = _emotes
     val messageId get() = _id
         ?: throw CorruptedMessageException(rawMessage, "id not available")
-    val username get() = _login
+    override val username get() = _login
         ?: throw CorruptedMessageException(rawMessage, "login not available")
-    val isMod get() = _isMod
+    override val isMod get() = _isMod
     val noticeId get() = _messageId
         ?: throw CorruptedMessageException(rawMessage, "message id (noticeId) not available")
     val roomId get() = _roomId

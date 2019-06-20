@@ -3,7 +3,7 @@ package com.ktmi.tmi.client.builder
 import com.ktmi.irc.IrcState
 import com.ktmi.tmi.client.TmiClient
 import com.ktmi.tmi.client.events.asTwitchMessageFlow
-import com.ktmi.tmi.messages.TwitchMessage
+import com.ktmi.tmi.messages.*
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -12,6 +12,35 @@ import kotlin.coroutines.CoroutineContext
 
 @DslMarker
 annotation class TwitchDsl
+
+/**
+ * Scope where all events are in relation to some **channel**
+ * Events available: [JoinMessage], [LeaveMessage], [UserStateMessage], [RoomStateMessage],
+ * [TextMessage], [ClearChatMessage], [ClearMessage], [NoticeMessage] and [UserNoticeMessage]
+ */
+abstract class ChannelContextScope(
+    parent: TwitchScope?,
+    context: CoroutineContext
+) : TwitchScope(parent, context)
+
+/**
+ * Scope where all events are in relation to some **user**
+ * Events available: [JoinMessage], [LeaveMessage], [UserStateMessage], [TextMessage],
+ * [ClearChatMessage], [ClearMessage] and [UserNoticeMessage]
+ */
+abstract class UserContextScope(
+    parent: TwitchScope?,
+    context: CoroutineContext
+) : TwitchScope(parent, context)
+
+/**
+ * Scope where all events are in relation to **UserState**
+ * Events available: [UserStateMessage], [TextMessage] and [UserNoticeMessage]
+ */
+abstract class UserStateContextScope(
+    parent: TwitchScope?,
+    context: CoroutineContext
+) : TwitchScope(parent, context)
 
 @TwitchDsl
 abstract class TwitchScope(
@@ -28,10 +57,6 @@ abstract class TwitchScope(
         parent?.getTwitchFlow()
             ?: throw NoParentException()
 
-    open fun getIrcStateFlow(): Flow<IrcState> =
-        parent?.getIrcStateFlow()
-            ?: throw NoParentException()
-
     class NoParentException : Exception("Accessing parent of top element")
 }
 
@@ -43,7 +68,7 @@ class MainScope(private val client: TmiClient) : TwitchScope(null,client.corouti
     }
 
     override suspend fun getTwitchFlow(): Flow<TwitchMessage> = client.raw.asTwitchMessageFlow
-    override fun getIrcStateFlow(): Flow<IrcState> = client.connectionStatus
+    fun getIrcStateFlow(): Flow<IrcState> = client.connectionStatus
 
     override suspend fun sendRaw(message: String) {
         client.sendRaw(message)
