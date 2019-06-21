@@ -12,6 +12,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
 import kotlin.coroutines.CoroutineContext
 
+
+/**
+ * [TwitchDsl] scope used to filter out messages by username
+ * @param channel name of the channel used for filtering [TwitchMessage]s
+ * @param parent parent scope where messages are forwarded and from  where main [Flow] of [TwitchMessage]s is retrieved
+ * @param coroutineContext [CoroutineContext] used for creating [TwitchMessage] listeners
+ */
 class ChannelScope(
     val channel: String,
     parent: TwitchScope,
@@ -24,10 +31,19 @@ class ChannelScope(
     }
 }
 
+/**
+ * [TwitchDsl] builder function for [ChannelScope]
+ * @param channel name used for filtering messages
+ * @param block body of the DSL ([ChannelScope])
+ */
 @TwitchDsl
 inline fun TwitchScope.channel(channel: String, block: ChannelScope.() -> Unit) =
     ChannelScope(channel, this, coroutineContext).apply(block)
 
+/**
+ * [TwitchDsl] builder function for [ChannelScope] what creates [UserScope] with channel broadcaster as filter
+ * @param block body of the DSL ([ChannelScope])
+ */
 @TwitchDsl
 inline fun ChannelScope.broadcaster(block: UserScope.() -> Unit) =
     UserScope(channel.channelAsUsername, this, coroutineContext).apply(block)

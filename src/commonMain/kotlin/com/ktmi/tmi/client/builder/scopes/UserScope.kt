@@ -1,5 +1,8 @@
 package com.ktmi.tmi.client.builder.scopes
 
+import com.ktmi.irc.RawMessage
+import com.ktmi.irc.TwitchIRC
+import com.ktmi.tmi.client.TmiClient
 import com.ktmi.tmi.client.builder.TwitchDsl
 import com.ktmi.tmi.client.builder.TwitchScope
 import com.ktmi.tmi.client.builder.UserContextScope
@@ -9,6 +12,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
 import kotlin.coroutines.CoroutineContext
 
+/**
+ * [TwitchDsl] scope used to filter out messages by username
+ * @param user [String] username used for filtering [TwitchMessage]s
+ * @param parent parent scope where messages are forwarded and from  where main [Flow] of [TwitchMessage]s is retrieved
+ * @param coroutineContext [CoroutineContext] used for creating [TwitchMessage] listeners
+ */
 class UserScope(
     val user: String,
     parent: TwitchScope,
@@ -29,6 +38,11 @@ class UserScope(
     }
 }
 
+/**
+ * [TwitchDsl] builder function for [UserScope]
+ * @param userName name used for filtering messages
+ * @param block body of the DSL ([UserScope])
+ */
 @TwitchDsl
-inline fun TwitchScope.broadcaster(userName: String, block: UserScope.() -> Unit) =
+inline fun TwitchScope.user(userName: String, block: UserScope.() -> Unit) =
     UserScope(userName, this, coroutineContext).apply(block)

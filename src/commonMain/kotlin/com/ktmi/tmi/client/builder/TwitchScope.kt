@@ -1,6 +1,8 @@
 package com.ktmi.tmi.client.builder
 
 import com.ktmi.irc.IrcState
+import com.ktmi.irc.RawMessage
+import com.ktmi.irc.TwitchIRC
 import com.ktmi.tmi.client.TmiClient
 import com.ktmi.tmi.client.events.asTwitchMessageFlow
 import com.ktmi.tmi.messages.*
@@ -10,6 +12,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlin.coroutines.CoroutineContext
 
+/**
+ * Annotation that marks a Twicth DSL composed of [TwitchScope]s
+ */
 @DslMarker
 annotation class TwitchDsl
 
@@ -42,17 +47,31 @@ abstract class UserStateContextScope(
     context: CoroutineContext
 ) : TwitchScope(parent, context)
 
+/**
+ * Base class for creating [TwitchDsl] components (scopes)
+ * @param parent parent scope where messages are forwarded and from  where main [Flow] of [TwitchMessage]s is retrieved
+ * @param context [CoroutineContext] used for creating [TwitchMessage] listeners
+ */
 @TwitchDsl
 abstract class TwitchScope(
     val parent: TwitchScope?,
     context: CoroutineContext
 ) : CoroutineScope by CoroutineScope(context) {
 
+    /**
+     * Sends raw (unparsed) message to [TwitchIRC]
+     * This message is sent up the chain of [TwitchScope]s. Each [TwitchScope] can alter this message
+     * @param message string message that will be sent to [TwitchIRC]
+     */
     open suspend fun sendRaw(message: String) {
         parent?.sendRaw(message)
             ?: throw NoParentException()
     }
 
+    /**
+     * Retrieves main [Flow] of [TwitchMessage]s from [TmiClient]
+     * This [Flow] is passed down the chain of [TwitchScope]s and each [TwitchScope] can alter the flow
+     */
     open suspend fun getTwitchFlow(): Flow<TwitchMessage> =
         parent?.getTwitchFlow()
             ?: throw NoParentException()
@@ -60,8 +79,14 @@ abstract class TwitchScope(
     class NoParentException : Exception("Accessing parent of top element")
 }
 
-
-class MainScope(private val client: TmiClient) : TwitchScope(null,client.coroutineContext + CoroutineName("Main Scope")) {
+/**
+ * Root [TwitchScope] of [TwitchDsl]
+ * @param client [TmiClient] that will be used from retrieving [Flow] of [RawMessage]s
+ * and sending string messages to [TwitchIRC]
+ */
+class MainScope(
+    private val client: TmiClient
+) : TwitchScope(null,client.coroutineContext + CoroutineName("Main Scope")) {
 
     init {
         client.connect()
@@ -76,7 +101,14 @@ class MainScope(private val client: TmiClient) : TwitchScope(null,client.corouti
 
 }
 
-
+/**
+ * Main builder of [TwitchScope]. Creates the root scope ([MainScope]).
+ * @param token Token in format *"oauth:token"*. You can get this token from [twitchapps](https://twitchapps.com/tmi/)
+ * @param username optional username passed in initialization of connection
+ * @param secure true if connection to twitch should be secure (using WSS protocol instead of WS)
+ * @param context [CoroutineContext] that should be used fro receiving messages from Twitch
+ * @param block Extension function used to pass in [MainScope]
+ */
 @TwitchDsl
 inline fun tmi(
     token: String,

@@ -9,6 +9,13 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlin.coroutines.CoroutineContext
 
+/**
+ * @param token Token in format *"oauth:token"*. You can get this token from [twitchapps](https://twitchapps.com/tmi/)
+ * @param username optional username passed in initialization of connection
+ * @param secure true if connection to twitch should be secure (using WSS protocol instead of WS)
+ * @param context [CoroutineContext] that should be used fro receiving messages from [TwitchIRC]
+ * @param irc Implementation of [TwitchIRC] used for communication with Twitch
+ */
 class TmiClient (
     token: String,
     username: String = "blank",
@@ -22,6 +29,7 @@ class TmiClient (
 
     // == Commands ==
 
+    /** Connects to [TwitchIRC] */
     fun connect() {
         launch {
             irc.connect()
@@ -30,12 +38,18 @@ class TmiClient (
         }
     }
 
+    /** Disconnects from [TwitchIRC] */
     fun disconnect() {
         messagesFlowDispenser.stop()
         stateFlowDispenser.stop()
         irc.disconnect()
     }
 
+    /**
+     * Sends *raw* (not parsed) messages to [TwitchIRC]
+     * @param message text that will be sent to [TwitchIRC]
+     * @throws NotConnectedException when [TwitchIRC] is disconnected (its state is [IrcState.DISCONNECTED])
+     */
     suspend fun sendRaw(message: String) {
         if (irc.currentState == CONNECTED)
             irc.sendMessage(message)
@@ -44,19 +58,14 @@ class TmiClient (
 
 
     // == Elementary events ==
-    private var flowCounter = 0
+    /** [Flow] of [RawMessage]s received from [TwitchIRC]*/
     val raw get() = messagesFlowDispenser.requestFlow()
 
+    /** [Flow] of [IrcState] events received from [TwitchIRC] */
     val connectionStatus: Flow<IrcState>
         get() = stateFlowDispenser.requestFlow()
 
-    // == Utility ==
-
-    // TODO try inlining in stable release. Now causes compilation errors
-    fun <T> Flow<T>.collectInTmiContext(
-        context: CoroutineContext = coroutineContext,
-        action: suspend (value: T) -> Unit
-    ) { launch { collect(action) } }
 }
 
+/** Exception thrown when communication with [TwitchIRC] fails due to connection issues */
 class NotConnectedException(msg: String? = null) : Exception(msg)

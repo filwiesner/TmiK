@@ -16,14 +16,19 @@ import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.consumeEach
 import kotlin.coroutines.CoroutineContext
 
+/**
+ * Basic implementation of [TwitchIRC] using [Ktor](https://ktor.io/) as Websocket client
+ * @param token Token in format *"oauth:token"*. You can get this token from [twitchapps](https://twitchapps.com/tmi/)
+ * @param username optional username passed in initialization of connection
+ * @param secure true if connection to twitch should be secure (using WSS protocol instead of WS)
+ * @param context [CoroutineContext] that should be used fro receiving messages from Twitch
+ */
 class TwitchIrcImpl(
     private val token: String,
     private val username: String = "blank",
     private val secure: Boolean = true,
     context: CoroutineContext = Dispatchers.Default
 ) : TwitchIRC, CoroutineScope by CoroutineScope(context) {
-
-    override val coroutineContext = context
 
     private val client = HttpClient { install(WebSockets) }
     private var session: DefaultClientWebSocketSession? = null

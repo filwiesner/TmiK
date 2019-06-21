@@ -2,8 +2,8 @@
 [![Download](https://api.bintray.com/packages/wooodenleg/maven/TmiK/images/download.svg)](https://bintray.com/wooodenleg/maven/TmiK/_latestVersion)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/03cd61c9bd1f40a2baf416ae1c84ade6)](https://www.codacy.com/app/wooodenleg/TmiK?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=wooodenleg/TmiK&amp;utm_campaign=Badge_Grade)
 [![GitHub](https://img.shields.io/github/license/wooodenleg/TmiK.svg?color=blue)](https://github.com/wooodenleg/TmiK/blob/master/LICENSE)  
-#### Twitch messaging in Kotlin
-##### Simple DSL for interacting with Twitch chat
+**T**witch **m**essaging **i**n **K**otlin  
+Simple DSL for interacting with Twitch chat
 
 ## State
 Only **JVM** and **JS** are targeted but I hope I will be able to add **Native** in the future.  
@@ -53,8 +53,8 @@ repositories {
 }
 
 dependencies {
-    implementation "com.tmik:TmiK-jvm:0.0.3" // For JVM
+    implementation "com.tmik:TmiK-jvm:0.0.4" // For JVM
     // OR
-    implementation "com.tmik:TmiK-js:0.0.3" // For Kotlin/JS
+    implementation "com.tmik:TmiK-js:0.0.4" // For Kotlin/JS
 }
 ```

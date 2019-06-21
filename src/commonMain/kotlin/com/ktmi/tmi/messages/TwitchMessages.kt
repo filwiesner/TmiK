@@ -4,15 +4,16 @@ package com.ktmi.tmi.messages
 
 import com.ktmi.irc.RawMessage
 
+/**
+ * Parsed message received from Twitch
+ * @param rawMessage The original [RawMessage]
+ * @param command identifies a command type
+ * @throws WrongMessageTypeException thrown if command in [RawMessage] does not match given command
+ */
 sealed class TwitchMessage(
     val rawMessage: RawMessage,
     command: String?
-//    val author: String = "tmi"
 ){ init { rawMessage.assertCommand(command) } }
-
-interface UserRelated {
-
-}
 
 /**
  * Twitch message which is related to some channel and user
@@ -54,6 +55,11 @@ private val TwitchMessage._messageId get() = rawMessage.tags["msg-id"]
 private val TwitchMessage._targetMessageId get() = rawMessage.tags["target-msg-id"]
 private val TwitchMessage._systemMessage get() = rawMessage.tags["system-msg"]
 
+/**
+ * Message received on successful login. Contains information about logged user
+ * @throws CorruptedMessageException when some property is not present
+ * @throws WrongMessageTypeException thrown if command in [RawMessage] does not match given command
+ */
 class GlobalUserStateMessage(
     rawMessage: RawMessage
 ) : TwitchMessage(rawMessage, "GLOBALUSERSTATE") {
@@ -67,6 +73,11 @@ class GlobalUserStateMessage(
         ?: throw CorruptedMessageException(rawMessage, "user id is not available")
 }
 
+/**
+ * Message received when user joined a channel
+ * @throws CorruptedMessageException when some property is not present
+ * @throws WrongMessageTypeException thrown if command in [RawMessage] does not match given command
+ */
 class JoinMessage(
     rawMessage: RawMessage
 ) : TwitchMessage(rawMessage, "JOIN") {
@@ -75,6 +86,11 @@ class JoinMessage(
     val username get() = _username
 }
 
+/**
+ * Message received when user left a channel
+ * @throws CorruptedMessageException when some property is not present
+ * @throws WrongMessageTypeException thrown if command in [RawMessage] does not match given command
+ */
 class LeaveMessage(
     rawMessage: RawMessage
 ) : TwitchMessage(rawMessage, "PART") {
@@ -83,6 +99,11 @@ class LeaveMessage(
     val username get() = _username
 }
 
+/**
+ * Identifies a user’s chat settings or properties. Received when user joins a channel
+ * @throws CorruptedMessageException when some property is not present
+ * @throws WrongMessageTypeException thrown if command in [RawMessage] does not match given command
+ */
 class UserStateMessage(
     rawMessage: RawMessage
 ) : TwitchMessage(rawMessage, "USERSTATE"), UserStateRelated {
@@ -97,6 +118,11 @@ class UserStateMessage(
     override val isMod get() = _isMod
 }
 
+/**
+ * Identifies the channel’s chat settings. Received when user joins a channel
+ * @throws CorruptedMessageException when some property is not present
+ * @throws WrongMessageTypeException thrown if command in [RawMessage] does not match given command
+ */
 class RoomStateMessage(
     rawMessage: RawMessage
 ) : TwitchMessage(rawMessage, "ROOMSTATE") {
@@ -109,6 +135,11 @@ class RoomStateMessage(
     val slowMode get() = _slowMode
 }
 
+/**
+ * Identifies text message sent by some user in some channel
+ * @throws CorruptedMessageException when some property is not present
+ * @throws WrongMessageTypeException thrown if command in [RawMessage] does not match given command
+ */
 class TextMessage(
     rawMessage: RawMessage
 ) : TwitchMessage(rawMessage, "PRIVMSG"), UserStateRelated {
@@ -133,7 +164,9 @@ class TextMessage(
 }
 
 /**
- * Purge a user’s message(s), typically after a user is banned from chat or timed out
+ * Received when user is purged, typically after a user is banned from chat or timed out
+ * @throws CorruptedMessageException when some property is not present
+ * @throws WrongMessageTypeException thrown if command in [RawMessage] does not match given command
  */
 class ClearChatMessage(
     rawMessage: RawMessage
@@ -147,6 +180,8 @@ class ClearChatMessage(
 
 /**
  * Single message removal on a channel. This is triggered via /delete <target-msg-id> on IRC
+ * @throws CorruptedMessageException when some property is not present
+ * @throws WrongMessageTypeException thrown if command in [RawMessage] does not match given command
  */
 class ClearMessage(
     rawMessage: RawMessage
@@ -166,6 +201,8 @@ class ClearMessage(
 /**
  * General notices from the server
  * All possible noticeIds: [https://dev.twitch.tv/docs/irc/msg-id/#msg-id-tags-for-notice]
+ * @throws CorruptedMessageException when some property is not present
+ * @throws WrongMessageTypeException thrown if command in [RawMessage] does not match given command
  */
 class NoticeMessage(
     rawMessage: RawMessage
@@ -180,6 +217,8 @@ class NoticeMessage(
 /**
  * Subscription, resubscription, gift subscription to a channel, Incoming raid, Channel ritual
  * Additional information: [https://dev.twitch.tv/docs/irc/tags/#usernotice-twitch-tags]
+ * @throws CorruptedMessageException when some property is not present
+ * @throws WrongMessageTypeException thrown if command in [RawMessage] does not match given command
  */
 class UserNoticeMessage(
     rawMessage: RawMessage
@@ -208,9 +247,19 @@ class UserNoticeMessage(
     val userId get() = _userId
 }
 
+/**
+ * Message that wasn't identified
+ */
 class UndefinedMessage(rawMessage: RawMessage) : TwitchMessage(rawMessage, rawMessage.commandName)
 
+/**
+ * thrown if command in [RawMessage] does not match given command
+ */
 class WrongMessageTypeException(msg: String) : Exception(msg)
+
+/**
+ * thrown when some property in [TwitchMessage] is not present
+ */
 class CorruptedMessageException(
     val msg: RawMessage,
     reason: String
