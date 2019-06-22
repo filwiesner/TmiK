@@ -1,4 +1,4 @@
-package com.ktmi.tmi.client.builder
+package com.ktmi.tmi.dsl.builder
 
 import com.ktmi.irc.IrcState
 import com.ktmi.irc.RawMessage
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlin.coroutines.CoroutineContext
 
 /**
- * Annotation that marks a Twicth DSL composed of [TwitchScope]s
+ * Annotation that marks a Twitch DSL composed of [TwitchScope]s
  */
 @DslMarker
 annotation class TwitchDsl
@@ -62,6 +62,7 @@ abstract class TwitchScope(
      * Sends raw (unparsed) message to [TwitchIRC]
      * This message is sent up the chain of [TwitchScope]s. Each [TwitchScope] can alter this message
      * @param message string message that will be sent to [TwitchIRC]
+     * @throws NoParentException
      */
     open suspend fun sendRaw(message: String) {
         parent?.sendRaw(message)
@@ -71,11 +72,13 @@ abstract class TwitchScope(
     /**
      * Retrieves main [Flow] of [TwitchMessage]s from [TmiClient]
      * This [Flow] is passed down the chain of [TwitchScope]s and each [TwitchScope] can alter the flow
+     * @throws NoParentException
      */
     open suspend fun getTwitchFlow(): Flow<TwitchMessage> =
         parent?.getTwitchFlow()
             ?: throw NoParentException()
 
+    /** Thrown when no parent is found */
     class NoParentException : Exception("Accessing parent of top element")
 }
 
@@ -93,6 +96,8 @@ class MainScope(
     }
 
     override suspend fun getTwitchFlow(): Flow<TwitchMessage> = client.raw.asTwitchMessageFlow
+
+    /** Retrieves connection state [Flow] of [IrcState] messages from [TmiClient] */
     fun getIrcStateFlow(): Flow<IrcState> = client.connectionStatus
 
     override suspend fun sendRaw(message: String) {

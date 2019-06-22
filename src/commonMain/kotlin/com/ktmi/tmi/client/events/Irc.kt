@@ -1,8 +1,7 @@
 package com.ktmi.tmi.client.events
 
 import com.ktmi.irc.IrcState
-import com.ktmi.tmi.client.builder.MainScope
-import com.ktmi.tmi.client.builder.TwitchScope
+import com.ktmi.tmi.dsl.builder.MainScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 

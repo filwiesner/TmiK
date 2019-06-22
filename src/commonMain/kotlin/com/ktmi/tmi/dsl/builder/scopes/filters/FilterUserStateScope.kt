@@ -1,8 +1,8 @@
-package com.ktmi.tmi.client.builder.scopes.filters
+package com.ktmi.tmi.dsl.builder.scopes.filters
 
-import com.ktmi.tmi.client.builder.TwitchDsl
-import com.ktmi.tmi.client.builder.TwitchScope
-import com.ktmi.tmi.client.builder.UserStateContextScope
+import com.ktmi.tmi.dsl.builder.TwitchDsl
+import com.ktmi.tmi.dsl.builder.TwitchScope
+import com.ktmi.tmi.dsl.builder.UserStateContextScope
 import com.ktmi.tmi.client.events.filterChannelUser
 import com.ktmi.tmi.messages.TwitchMessage
 import com.ktmi.tmi.messages.UserStateRelated

@@ -1,20 +1,8 @@
 package com.ktmi.tmi.client
 
-import com.ktmi.runTest
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.toList
-import kotlin.random.Random
-import kotlin.random.nextInt
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
-
-class FlowDispenserTests {
-    val dispatcher = Dispatchers.Default
-    lateinit var unitChannel: Channel<Unit>
+//class FlowDispenserTests {
+//    val dispatcher = Dispatchers.Default
+//    lateinit var unitChannel: Channel<Unit>
 //    lateinit var unitDispenser: FlowDispenser<Unit>
 
 //    @BeforeTest
@@ -45,4 +33,4 @@ class FlowDispenserTests {
 //
 //        assertEquals(count * iterations, countArr.sum())
 //    }
-}
+//}

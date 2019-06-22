@@ -1,8 +1,8 @@
-package com.ktmi.tmi.client.builder.scopes
+package com.ktmi.tmi.dsl.builder.scopes
 
-import com.ktmi.tmi.client.builder.ChannelContextScope
-import com.ktmi.tmi.client.builder.TwitchDsl
-import com.ktmi.tmi.client.builder.TwitchScope
+import com.ktmi.tmi.dsl.builder.ChannelContextScope
+import com.ktmi.tmi.dsl.builder.TwitchDsl
+import com.ktmi.tmi.dsl.builder.TwitchScope
 import com.ktmi.tmi.client.commands.*
 import com.ktmi.tmi.messages.TwitchMessage
 import com.ktmi.tmi.messages.asChannelName
