@@ -99,9 +99,6 @@ class TwitchIrcImpl(
             // This should never happen but NullPointerException does not exist, right?
             if (session == null) return@launch
 
-            // Ignore first two messages
-            repeat(2) { session!!.incoming.receive() }
-
             // Receive rest of the messages
             try {
                 session!!.incoming.consumeEach { receivedMessage(it) }

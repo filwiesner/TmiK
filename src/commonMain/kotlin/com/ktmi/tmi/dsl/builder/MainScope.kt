@@ -5,17 +5,27 @@ import com.ktmi.irc.RawMessage
 import com.ktmi.irc.TwitchIRC
 import com.ktmi.tmi.client.TmiClient
 import com.ktmi.tmi.client.events.asTwitchMessageFlow
+import com.ktmi.tmi.dsl.plugins.Container
 import com.ktmi.tmi.messages.TwitchMessage
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlin.coroutines.CoroutineContext
 
-/** Identifies class who can supply [IrcState] [Flow] */
-interface IrcStateProvider {
+/** Supplies [TmiClient] functionality */
+interface TmiStateProvider {
+
+    /** Username of account on which is [TmiClient] running */
+    val username: String
+
+    /** Connects [TmiClient] to Twitch */
+    fun connect()
+
+    /** Disconnects [TmiClient] from Twitch */
+    fun disconnect()
 
     /** Retrieves connection state [Flow] of [IrcState] messages from [TmiClient] */
-    fun getIrcStateFlow(): Flow<IrcState>
+    val connectionStatus: Flow<IrcState>
 }
 
 /**
@@ -25,16 +35,18 @@ interface IrcStateProvider {
  */
 class MainScope(
     private val client: TmiClient
-) : TwitchScope(null,client.coroutineContext + CoroutineName("Main Scope")),
-    IrcStateProvider {
+) : Container(
+    null,
+    client.coroutineContext + CoroutineName("Main Scope"),
+    client
+), TmiStateProvider {
 
-    init {
-        client.connect()
-    }
+    override val username get() = client.username
+    override fun connect() = client.connect()
+    override fun disconnect() = client.disconnect()
+    override val connectionStatus: Flow<IrcState> = client.connectionStatus
 
     override suspend fun getTwitchFlow(): Flow<TwitchMessage> = client.raw.asTwitchMessageFlow
-
-    override fun getIrcStateFlow(): Flow<IrcState> = client.connectionStatus
 
     override suspend fun sendRaw(message: String) {
         client.sendRaw(message)
@@ -62,5 +74,6 @@ inline fun tmi(
 ) {
     MainScope(
         TmiClient(token, username, secure, context)
+            .also(TmiClient::connect)
     ).apply(block)
 }

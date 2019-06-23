@@ -5,6 +5,7 @@ import com.ktmi.irc.IrcState.*
 import com.ktmi.irc.RawMessage
 import com.ktmi.irc.TwitchIRC
 import com.ktmi.irc.TwitchIrcImpl
+import com.ktmi.tmi.dsl.builder.TmiStateProvider
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlin.coroutines.CoroutineContext
@@ -22,15 +23,26 @@ class TmiClient (
     secure: Boolean = true,
     context: CoroutineContext = Dispatchers.Default,
     private val irc: TwitchIRC = TwitchIrcImpl(token, username, secure, context)
-) : CoroutineScope by CoroutineScope(context) {
+) : TmiStateProvider, CoroutineScope by CoroutineScope(context) {
 
     private val messagesFlowDispenser = FlowDispenser(irc.messages, context)
     private val stateFlowDispenser = FlowDispenser(irc.states, context)
 
-    // == Commands ==
+    private var clientUsername: String? = null
+
+    init { launch {
+        try { raw.collect {
+            if (it.commandName == "001") {
+                clientUsername = it.channel
+                cancel()
+            }
+        } } catch (e: CancellationException) { }
+    } }
+
+    override val username: String get() = clientUsername ?: "unknown"
 
     /** Connects to [TwitchIRC] */
-    fun connect() {
+    override fun connect() {
         launch {
             irc.connect()
             messagesFlowDispenser.initialize()
@@ -39,7 +51,7 @@ class TmiClient (
     }
 
     /** Disconnects from [TwitchIRC] */
-    fun disconnect() {
+    override fun disconnect() {
         messagesFlowDispenser.stop()
         stateFlowDispenser.stop()
         irc.disconnect()
@@ -62,7 +74,7 @@ class TmiClient (
     val raw get() = messagesFlowDispenser.requestFlow()
 
     /** [Flow] of [IrcState] events received from [TwitchIRC] */
-    val connectionStatus: Flow<IrcState>
+    override val connectionStatus: Flow<IrcState>
         get() = stateFlowDispenser.requestFlow()
 
 }

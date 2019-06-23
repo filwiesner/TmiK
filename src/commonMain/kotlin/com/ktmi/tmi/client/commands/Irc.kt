@@ -1,4 +1,4 @@
 package com.ktmi.tmi.client.commands
 
-// TODO
+// TODO reconnect command
 //suspend fun TwitchScope.reconnect() = sendRaw("RECONNECT")

@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 /** Registers a listener for [IrcState] */
 inline fun MainScope.onConnectionState(crossinline action: suspend (IrcState) -> Unit) {
     launch {
-        getIrcStateFlow().collect {
+        connectionStatus.collect {
             action(it)
         }
     }
