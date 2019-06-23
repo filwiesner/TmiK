@@ -1,7 +1,7 @@
 package com.ktmi.tmi.client.events
 
 import com.ktmi.irc.RawMessage
-import com.ktmi.tmi.client.builder.*
+import com.ktmi.tmi.dsl.builder.*
 import com.ktmi.tmi.messages.asChannelName
 import com.ktmi.tmi.messages.*
 import kotlinx.coroutines.flow.*

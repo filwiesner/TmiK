@@ -1,11 +1,8 @@
-package com.ktmi.tmi.client.builder.scopes
+package com.ktmi.tmi.dsl.builder.scopes
 
-import com.ktmi.irc.RawMessage
-import com.ktmi.irc.TwitchIRC
-import com.ktmi.tmi.client.TmiClient
-import com.ktmi.tmi.client.builder.TwitchDsl
-import com.ktmi.tmi.client.builder.TwitchScope
-import com.ktmi.tmi.client.builder.UserContextScope
+import com.ktmi.tmi.dsl.builder.TwitchDsl
+import com.ktmi.tmi.dsl.builder.TwitchScope
+import com.ktmi.tmi.dsl.builder.UserContextScope
 import com.ktmi.tmi.messages.*
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.flow.Flow

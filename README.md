@@ -17,12 +17,13 @@ It's usable on JVM but I would not recommend using the JS version yet.
 With help of some Kotlin features I was able to create simple DSL:
 ```kotlin
 tmi("oauth:token") {
-
+    + Reconnect(5) // Tries to reconnect for five times if network fails (and re-joins all channels)
+ 
     onRoomState { println("Joined ${it.channel}") }
 
     channel("mychannel") {
 
-        broadcaster {
+        broadcaster { // Filters only events by/for broadcaster
             onMessage {
                 if (it.message == "hello")
                     this@channel.action("Hello ${it.displayName}")
@@ -30,6 +31,7 @@ tmi("oauth:token") {
         }
 
         filterUserState {
+            // Filters events that are not by/for moderators
             withPredicate { !it.isMod }
 
             onMessage {
@@ -53,8 +55,8 @@ repositories {
 }
 
 dependencies {
-    implementation "com.tmik:TmiK-jvm:0.0.4" // For JVM
+    implementation "com.tmik:TmiK-jvm:0.0.5" // For JVM
     // OR
-    implementation "com.tmik:TmiK-js:0.0.4" // For Kotlin/JS
+    implementation "com.tmik:TmiK-js:0.0.5" // For Kotlin/JS
 }
 ```

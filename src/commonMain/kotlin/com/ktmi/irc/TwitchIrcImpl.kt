@@ -22,6 +22,7 @@ import kotlin.coroutines.CoroutineContext
  * @param username optional username passed in initialization of connection
  * @param secure true if connection to twitch should be secure (using WSS protocol instead of WS)
  * @param context [CoroutineContext] that should be used fro receiving messages from Twitch
+ * @throws UnsupportedFrameException thrown when unsupported [Frame] type is received
  */
 class TwitchIrcImpl(
     private val token: String,
@@ -98,9 +99,6 @@ class TwitchIrcImpl(
             // This should never happen but NullPointerException does not exist, right?
             if (session == null) return@launch
 
-            // Ignore first two messages
-            repeat(2) { session!!.incoming.receive() }
-
             // Receive rest of the messages
             try {
                 session!!.incoming.consumeEach { receivedMessage(it) }
@@ -125,7 +123,7 @@ class TwitchIrcImpl(
 
         }
 
-        else -> throw Exception("Unrecognized Frame")
+        else -> throw UnsupportedFrameException()
     }
 
     override suspend fun sendMessage(message: String) {
@@ -149,3 +147,6 @@ class TwitchIrcImpl(
         }
     }
 }
+
+/** Thrown when [TwitchIRC] gets an Frame that is not supported */
+class UnsupportedFrameException : Exception("Frame type not supported")

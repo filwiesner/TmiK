@@ -56,6 +56,7 @@ class RawMessageBuilder(val raw: String) {
     var command: String? = null
     var text: String? = null
 
+    /** Builds [RawMessage] with given information */
     fun build() = RawMessage(raw, tags, prefix, command, channel, text)
 }
 
