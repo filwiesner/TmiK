@@ -1,10 +1,7 @@
 package com.ktmi.tmi.client
 
-import com.ktmi.irc.IrcState
+import com.ktmi.irc.*
 import com.ktmi.irc.IrcState.*
-import com.ktmi.irc.RawMessage
-import com.ktmi.irc.TwitchIRC
-import com.ktmi.irc.TwitchIrcImpl
 import com.ktmi.tmi.dsl.builder.TmiStateProvider
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -22,7 +19,7 @@ class TmiClient (
     username: String = "blank",
     secure: Boolean = true,
     context: CoroutineContext = Dispatchers.Default,
-    private val irc: TwitchIRC = TwitchIrcImpl(token, username, secure, context)
+    private val irc: TwitchIRC = IRC(token, username, secure, context)
 ) : TmiStateProvider, CoroutineScope by CoroutineScope(context) {
 
     private val messagesFlowDispenser = FlowDispenser(irc.messages, context)
@@ -43,11 +40,9 @@ class TmiClient (
 
     /** Connects to [TwitchIRC] */
     override fun connect() {
-        launch {
-            irc.connect()
-            messagesFlowDispenser.initialize()
-            stateFlowDispenser.initialize()
-        }
+        irc.connect()
+        messagesFlowDispenser.initialize()
+        stateFlowDispenser.initialize()
     }
 
     /** Disconnects from [TwitchIRC] */
@@ -62,7 +57,7 @@ class TmiClient (
      * @param message text that will be sent to [TwitchIRC]
      * @throws NotConnectedException when [TwitchIRC] is disconnected (its state is [IrcState.DISCONNECTED])
      */
-    suspend fun sendRaw(message: String) {
+    fun sendRaw(message: String) {
         if (irc.currentState == CONNECTED)
             irc.sendMessage(message)
         else throw NotConnectedException("Client is not connected to Twitch IRC.")

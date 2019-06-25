@@ -58,7 +58,7 @@ open class Container(
 
     override val connectionStatus: Flow<IrcState> = provider.connectionStatus
 
-    override suspend fun getTwitchFlow(): Flow<TwitchMessage> = super.getTwitchFlow()
+    override fun getTwitchFlow(): Flow<TwitchMessage> = super.getTwitchFlow()
         .filter { message ->
             plugins.values.all { it.filterIncoming(message) }
         }.map {
@@ -70,7 +70,7 @@ open class Container(
             message
         }
 
-    override suspend fun sendRaw(message: String) {
+    override fun sendRaw(message: String) {
         if (!plugins.values.all { it.filterOutgoing(message) })
             return
 
@@ -81,6 +81,7 @@ open class Container(
         super.sendRaw(finalMessage)
     }
 
+    /** Adds [TwitchPlugin] to this [Container] */
     operator fun TwitchPlugin.unaryPlus() {
         val name = this.name
         if (plugins.containsKey(name))
@@ -90,10 +91,12 @@ open class Container(
     }
 }
 
+/** Basic builder function for [Container] */
 @TwitchDsl
 inline fun TwitchScope.container(block: Container.() -> Unit) =
     Container(this, coroutineContext).apply(block)
 
 /** Thrown when no parent is IrcStateProvider */
 class NoIrcStateHandlerException : Exception("No parent of TwitchContainer provides IrcState (implements IrcStateProvider)")
+/** Thrown when added [TwitchPlugin] already exist in [Container] */
 class PluginAlreadyExistsException(name: String) : Exception("Plugin with name $name already exists in this container")

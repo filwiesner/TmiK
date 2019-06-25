@@ -7,11 +7,10 @@ plugins {
 repositories {
     mavenCentral()
     jcenter()
-    maven { url = uri("https://kotlin.bintray.com/ktor") }
 }
 
 group 'com.tmik'
-version '0.0.5'
+version '0.0.6'
 
 apply plugin: 'maven-publish'
 
@@ -29,9 +28,6 @@ kotlin {
         commonMain {
             dependencies {
                 implementation kotlin('stdlib-common')
-
-                implementation "io.ktor:ktor-client-websockets:$ktor_version"
-                implementation "io.ktor:ktor-network:$ktor_version"
                 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutines_version"
             }
         }
@@ -46,9 +42,8 @@ kotlin {
             dependencies {
                 implementation kotlin('stdlib-jdk8')
 
-                implementation "io.ktor:ktor-client-cio:$ktor_version"
                 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
-                implementation "ch.qos.logback:logback-classic:1.2.3"
+                implementation "com.squareup.okhttp3:okhttp:3.14.2"
             }
         }
         jvmTest {
@@ -61,8 +56,7 @@ kotlin {
         jsMain {
             dependencies {
                 implementation kotlin('stdlib-js')
-
-                implementation "io.ktor:ktor-client-js:$ktor_version"
+                implementation(npm("ws", "7.0.1"))
                 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$coroutines_version"
             }
         }

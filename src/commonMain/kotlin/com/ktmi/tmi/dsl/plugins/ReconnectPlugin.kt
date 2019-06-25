@@ -10,6 +10,7 @@ import com.ktmi.tmi.messages.LeaveMessage
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -18,20 +19,21 @@ import kotlinx.coroutines.launch
  * @param interval the interval between attempts (10s by default)
  */
 fun Container.Reconnect(attempts: Int = 0, interval: Long = 10_000) = object : TwitchPlugin {
-    private val activeChannels = mutableListOf<String>()
+    private val activeChannels = mutableSetOf<String>()
     private var currState = DISCONNECTED
     private var connectingJob: Job? = null
 
     override val name = "reconnect"
 
     init {
-        onTwitchMessage<JoinMessage> {
-            if (it.username == username)
-                activeChannels.add(it.channel)
-        }
-        onTwitchMessage<LeaveMessage> {
-            if (it.username == username)
-                activeChannels.remove(it.channel)
+        launch {
+            getTwitchFlow().collect {
+                if (it is JoinMessage && it.username == username) {
+                    activeChannels.add(it.channel)
+                } else if (it is LeaveMessage && it.username == username) {
+                    activeChannels.remove(it.channel)
+                }
+            }
         }
     }
 

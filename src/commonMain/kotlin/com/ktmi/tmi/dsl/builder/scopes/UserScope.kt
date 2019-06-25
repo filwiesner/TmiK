@@ -22,7 +22,7 @@ class UserScope(
 ) : UserContextScope(parent,coroutineContext + CoroutineName("UserTwitch")) {
     private val lowerUser = user.toLowerCase()
 
-    override suspend fun getTwitchFlow(): Flow<TwitchMessage> {
+    override fun getTwitchFlow(): Flow<TwitchMessage> {
         return super.getTwitchFlow()
             .filter { it.rawMessage.author == lowerUser
                     ||it.rawMessage.tags["login"] == lowerUser

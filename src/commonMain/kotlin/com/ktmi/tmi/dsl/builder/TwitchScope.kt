@@ -35,7 +35,7 @@ abstract class TwitchScope(
      * @param message string message that will be sent to [TwitchIRC]
      * @throws NoParentException
      */
-    open suspend fun sendRaw(message: String) {
+    open fun sendRaw(message: String) {
         parent?.sendRaw(message)
             ?: throw NoParentException()
     }
@@ -45,7 +45,7 @@ abstract class TwitchScope(
      * This [Flow] is passed down the chain of [TwitchScope]s and each [TwitchScope] can alter the flow
      * @throws NoParentException
      */
-    open suspend fun getTwitchFlow(): Flow<TwitchMessage> =
+    open fun getTwitchFlow(): Flow<TwitchMessage> =
         parent?.getTwitchFlow()
             ?: throw NoParentException()
 

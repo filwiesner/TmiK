@@ -5,13 +5,11 @@
 **T**witch **m**essaging **i**n **K**otlin  
 Simple DSL for interacting with Twitch chat
 
+**See the [Documentation](https://github.com/wooodenleg/TmiK/wiki) for more information**
+
 ## State
 Only **JVM** and **JS** are targeted but I hope I will be able to add **Native** in the future.  
-  
-WebSocket communication depends on [Ktor](https://github.com/ktorio/ktor) client [WebSocket feature](https://ktor.io/clients/websockets.html)
-which is unstable. I am considering creating my own WebSocket implementation but I am not sure how well would I be able to do it.   
-Because of this fact this library is unstable (follow [this](https://github.com/ktorio/ktor/issues/1119) or [this](https://github.com/ktorio/ktor/issues/1110) issue).  
-It's usable on JVM but I would not recommend using the JS version yet.    
+ 
 
 ## Example
 With help of some Kotlin features I was able to create simple DSL:
@@ -55,8 +53,8 @@ repositories {
 }
 
 dependencies {
-    implementation "com.tmik:TmiK-jvm:0.0.5" // For JVM
+    implementation "com.tmik:TmiK-jvm:0.0.6" // For JVM
     // OR
-    implementation "com.tmik:TmiK-js:0.0.5" // For Kotlin/JS
+    implementation "com.tmik:TmiK-js:0.0.6" // For Kotlin/JS
 }
 ```

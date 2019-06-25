@@ -1,6 +1,16 @@
 package com.ktmi.irc
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.ReceiveChannel
+import kotlin.coroutines.CoroutineContext
+
+/** Expected implementation of TwitchIRC interface for different platform targets */
+expect class IRC(
+    token: String,
+    username: String = "blank",
+    secure: Boolean = true,
+    context: CoroutineContext = Dispatchers.Default
+) : TwitchIRC
 
 /**
  * Defines a IRC client that communicates with Twitch servers and forwards the communication via [ReceiveChannel]
@@ -25,7 +35,7 @@ interface TwitchIRC {
     /**
      * Connects to Twitch IRC and sends [IrcState.CONNECTING] followed by [IrcState.CONNECTED]
      */
-    suspend fun connect()
+    fun connect()
 
     /**
      * Disconnects from Twitch IRC and sends [IrcState.DISCONNECTED]
@@ -35,7 +45,7 @@ interface TwitchIRC {
     /**
      * Sends message to Twitch IRC without any changes (unparsed)
      */
-    suspend fun sendMessage(message: String)
+    fun sendMessage(message: String)
 }
 
 /**
