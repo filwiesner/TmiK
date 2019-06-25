@@ -5,6 +5,8 @@
 **T**witch **m**essaging **i**n **K**otlin  
 Simple DSL for interacting with Twitch chat
 
+**See the [Documentation](https://github.com/wooodenleg/TmiK/wiki) for more information**
+
 ## State
 Only **JVM** and **JS** are targeted but I hope I will be able to add **Native** in the future.  
   

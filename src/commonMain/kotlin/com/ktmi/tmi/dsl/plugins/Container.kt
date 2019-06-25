@@ -81,6 +81,7 @@ open class Container(
         super.sendRaw(finalMessage)
     }
 
+    /** Adds [TwitchPlugin] to this [Container] */
     operator fun TwitchPlugin.unaryPlus() {
         val name = this.name
         if (plugins.containsKey(name))
@@ -90,10 +91,12 @@ open class Container(
     }
 }
 
+/** Basic builder function for [Container] */
 @TwitchDsl
 inline fun TwitchScope.container(block: Container.() -> Unit) =
     Container(this, coroutineContext).apply(block)
 
 /** Thrown when no parent is IrcStateProvider */
 class NoIrcStateHandlerException : Exception("No parent of TwitchContainer provides IrcState (implements IrcStateProvider)")
+/** Thrown when added [TwitchPlugin] already exist in [Container] */
 class PluginAlreadyExistsException(name: String) : Exception("Plugin with name $name already exists in this container")
