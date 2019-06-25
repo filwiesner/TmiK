@@ -7,14 +7,14 @@ import com.ktmi.tmi.messages.asChannelName
  * Join channel
  * @param channel Channel where this command should be executed
  */
-suspend fun TwitchScope.join(channel: String) =
+fun TwitchScope.join(channel: String) =
     sendRaw("JOIN ${channel.asChannelName}")
 
 /**
  * Leave a channel
  * @param channel Channel where this command should be executed
  */
-suspend fun TwitchScope.leave(channel: String) =
+fun TwitchScope.leave(channel: String) =
     sendRaw("PART ${channel.asChannelName}")
 
 /**
@@ -22,7 +22,7 @@ suspend fun TwitchScope.leave(channel: String) =
  * @param channel Channel where this command should be executed
  * @param message Message that should be sent to chat of specified channel
  */
-suspend fun TwitchScope.sendMessage(channel: String, message: String) =
+fun TwitchScope.sendMessage(channel: String, message: String) =
     sendRaw("PRIVMSG ${channel.asChannelName} :$message")
 
 /**
@@ -30,7 +30,7 @@ suspend fun TwitchScope.sendMessage(channel: String, message: String) =
  * @param channel Channel where this command should be executed
  * @param message Message that should be sent to chat of specified channel
  */
-suspend fun TwitchScope.action(channel: String, message: String) =
+fun TwitchScope.action(channel: String, message: String) =
     sendMessage(channel, "/me $message")
 
 /**
@@ -38,7 +38,7 @@ suspend fun TwitchScope.action(channel: String, message: String) =
  * @param channel Channel where this command should be executed
  * @param userName username of user tha should be banned
  */
-suspend fun TwitchScope.ban(channel: String, userName: String) =
+fun TwitchScope.ban(channel: String, userName: String) =
         sendMessage(channel, "/ban $userName")
 
 /**
@@ -47,7 +47,7 @@ suspend fun TwitchScope.ban(channel: String, userName: String) =
  * @param channel Channel where this command should be executed
  * @param userName username of user tha should be unbanned
  */
-suspend fun TwitchScope.unban(channel: String, userName: String) =
+fun TwitchScope.unban(channel: String, userName: String) =
     sendMessage(channel, "/unban $userName")
 
 /**
@@ -56,7 +56,7 @@ suspend fun TwitchScope.unban(channel: String, userName: String) =
  * @param userName username of user tha should be timed out
  * @param seconds number of seconds for how long should the timeout be. Default is 10 minutes
  */
-suspend fun TwitchScope.timeout(channel: String, userName: String, seconds: Int = 600) =
+fun TwitchScope.timeout(channel: String, userName: String, seconds: Int = 600) =
     sendMessage(channel,
         "/timeout $userName $seconds"
     )
@@ -66,14 +66,14 @@ suspend fun TwitchScope.timeout(channel: String, userName: String, seconds: Int 
  * @param channel Channel where this command should be executed
  * @param seconds number of seconds for how often can users send messages
  */
-suspend fun TwitchScope.slowMode(channel: String, seconds: Int) =
+fun TwitchScope.slowMode(channel: String, seconds: Int) =
     sendMessage(channel, "/slow $seconds")
 
 /**
  * This command allows you to disable slow mode if you had previously set it.
  * @param channel Channel where this command should be executed
  */
-suspend fun TwitchScope.disableSlowMode(channel: String) =
+fun TwitchScope.disableSlowMode(channel: String) =
     sendMessage(channel, "/slowoff")
 
 /**
@@ -84,14 +84,14 @@ suspend fun TwitchScope.disableSlowMode(channel: String) =
  * For example *"30m"* for 30 minutes or *"2d"* for two days. For more information,
  * refer to [documentation](https://help.twitch.tv/s/article/chat-commands?language=en_US#AllMods)
  */
-suspend fun TwitchScope.followOnly(channel: String, duration: String) =
+fun TwitchScope.followOnly(channel: String, duration: String) =
     sendMessage(channel, "/followers $duration")
 
 /**
  * This command allows you to disable followers only mode if you had previously set it.
  * @param channel Channel where this command should be executed
  */
-suspend fun TwitchScope.disableFollowOnly(channel: String) =
+fun TwitchScope.disableFollowOnly(channel: String) =
     sendMessage(channel, "/followersoff")
 
 /**
@@ -100,21 +100,21 @@ suspend fun TwitchScope.disableFollowOnly(channel: String) =
  * to talk in the chat room.
  * @param channel Channel where this command should be executed
  */
-suspend fun TwitchScope.subOnly(channel: String) =
+fun TwitchScope.subOnly(channel: String) =
     sendMessage(channel, "/subscribers")
 
 /**
  * This command allows you to disable subscribers only chat room if you previously enabled it.
  * @param channel Channel where this command should be executed
  */
-suspend fun TwitchScope.disableSubOnly(channel: String) =
+fun TwitchScope.disableSubOnly(channel: String) =
     sendMessage(channel, "/subscribersoff")
 
 /**
  * This command will allow the Broadcaster and chat moderators to completely wipe the previous chat history.
  * @param channel Channel where this command should be executed
  */
-suspend fun TwitchScope.clearChat(channel: String) =
+fun TwitchScope.clearChat(channel: String) =
     sendMessage(channel, "/clear")
 
 /**
@@ -124,28 +124,28 @@ suspend fun TwitchScope.clearChat(channel: String) =
  * generic copy-pasted messages intended as spam among over generally annoying content.
  * @param channel Channel where this command should be executed
  */
-suspend fun TwitchScope.r9KBeta(channel: String) =
+fun TwitchScope.r9KBeta(channel: String) =
     sendMessage(channel, "/r9kbeta")
 
 /**
  * This command will disable R9K mode if it was previously enabled on the channel.
  * @param channel Channel where this command should be executed
  */
-suspend fun TwitchScope.disableR9KBeta(channel: String) =
+fun TwitchScope.disableR9KBeta(channel: String) =
     sendMessage(channel, "/r9kbetaoff")
 
 /**
  * This command allows you to set your room so only messages that are 100% emotes are allowed.
  * @param channel Channel where this command should be executed
  */
-suspend fun TwitchScope.emoteOnly(channel: String) =
+fun TwitchScope.emoteOnly(channel: String) =
     sendMessage(channel, "/emoteonly")
 
 /**
  * This command allows you to disable emote only mode if you previously enabled it.
  * @param channel Channel where this command should be executed
  */
-suspend fun TwitchScope.disableEmoteOnly(channel: String) =
+fun TwitchScope.disableEmoteOnly(channel: String) =
     sendMessage(channel, "/emoteonlyoff")
 
 
@@ -156,7 +156,7 @@ suspend fun TwitchScope.disableEmoteOnly(channel: String) =
  * @param channel Channel where this command should be executed
  * @param color name or hex value of the color
  */
-suspend fun TwitchScope.setColor(channel: String, color: String) =
+fun TwitchScope.setColor(channel: String, color: String) =
     sendMessage(channel, "/color $color")
 
 /**
@@ -164,7 +164,7 @@ suspend fun TwitchScope.setColor(channel: String, color: String) =
  * @param channel Channel where this command should be executed
  * @param username name of the user that should be modded
  */
-suspend fun TwitchScope.mod(channel: String, username: String) =
+fun TwitchScope.mod(channel: String, username: String) =
     sendMessage(channel, "/mod $username")
 
 /**
@@ -172,7 +172,7 @@ suspend fun TwitchScope.mod(channel: String, username: String) =
  * @param channel Channel where this command should be executed
  * @param username name of the user that should be unmodded
  */
-suspend fun TwitchScope.unmod(channel: String, username: String) =
+fun TwitchScope.unmod(channel: String, username: String) =
     sendMessage(channel, "/unmod $username")
 
 /**
@@ -180,7 +180,7 @@ suspend fun TwitchScope.unmod(channel: String, username: String) =
  * @param channel Channel where this command should be executed
  * @param username name of the user that should receive VIP status
  */
-suspend fun TwitchScope.vip(channel: String, username: String) =
+fun TwitchScope.vip(channel: String, username: String) =
     sendMessage(channel, "/vip $username")
 
 /**
@@ -188,5 +188,5 @@ suspend fun TwitchScope.vip(channel: String, username: String) =
  * @param channel Channel where this command should be executed
  * @param username name of the user that should lose VIP status
  */
-suspend fun TwitchScope.unvip(channel: String, username: String) =
+fun TwitchScope.unvip(channel: String, username: String) =
     sendMessage(channel, "/unvip $username")

@@ -58,7 +58,7 @@ open class Container(
 
     override val connectionStatus: Flow<IrcState> = provider.connectionStatus
 
-    override suspend fun getTwitchFlow(): Flow<TwitchMessage> = super.getTwitchFlow()
+    override fun getTwitchFlow(): Flow<TwitchMessage> = super.getTwitchFlow()
         .filter { message ->
             plugins.values.all { it.filterIncoming(message) }
         }.map {
@@ -70,7 +70,7 @@ open class Container(
             message
         }
 
-    override suspend fun sendRaw(message: String) {
+    override fun sendRaw(message: String) {
         if (!plugins.values.all { it.filterOutgoing(message) })
             return
 

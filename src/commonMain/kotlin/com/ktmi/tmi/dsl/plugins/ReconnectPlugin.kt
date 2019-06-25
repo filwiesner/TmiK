@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
  * @param interval the interval between attempts (10s by default)
  */
 fun Container.Reconnect(attempts: Int = 0, interval: Long = 10_000) = object : TwitchPlugin {
-    private val activeChannels = mutableListOf<String>()
+    private val activeChannels = mutableSetOf<String>()
     private var currState = DISCONNECTED
     private var connectingJob: Job? = null
 
@@ -67,7 +67,7 @@ fun Container.Reconnect(attempts: Int = 0, interval: Long = 10_000) = object : T
         } catch (e: CancellationException) {}
     }
 
-    private fun rejoinChannels() { launch {
-        activeChannels.forEach { join(it) }
-    } }
+    private fun rejoinChannels() {
+        launch { activeChannels.forEach { join(it) } }
+    }
 }

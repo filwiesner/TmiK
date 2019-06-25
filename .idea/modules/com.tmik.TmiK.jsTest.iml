@@ -4,9 +4,9 @@
     <facet type="kotlin-language" name="Kotlin">
       <configuration version="3" platform="JavaScript " useProjectSettings="false" isTestModule="true" externalProjectId="TmiK">
         <sourceSets>
+          <sourceSet>com.tmik.TmiK.jsMain</sourceSet>
           <sourceSet>com.tmik.TmiK.commonTest</sourceSet>
           <sourceSet>com.tmik.TmiK.commonMain</sourceSet>
-          <sourceSet>com.tmik.TmiK.jsMain</sourceSet>
         </sourceSets>
         <newMppModelJpsModuleKind>COMPILATION_AND_SOURCE_SET_HOLDER</newMppModelJpsModuleKind>
         <testOutputPath>$MODULE_DIR$/../../build/classes/kotlin/js/test/TmiK_test.js</testOutputPath>

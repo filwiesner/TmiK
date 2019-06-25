@@ -46,9 +46,9 @@ class MainScope(
     override fun disconnect() = client.disconnect()
     override val connectionStatus: Flow<IrcState> = client.connectionStatus
 
-    override suspend fun getTwitchFlow(): Flow<TwitchMessage> = client.raw.asTwitchMessageFlow
+    override fun getTwitchFlow(): Flow<TwitchMessage> = client.raw.asTwitchMessageFlow
 
-    override suspend fun sendRaw(message: String) {
+    override fun sendRaw(message: String) {
         client.sendRaw(message)
     }
 

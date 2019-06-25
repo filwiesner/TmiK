@@ -28,7 +28,7 @@ class FilterUserStateScope (
      */
     infix fun withPredicate(filter: suspend (UserStateRelated) -> Boolean) { predicate = filter }
 
-    override suspend fun getTwitchFlow(): Flow<TwitchMessage> =
+    override fun getTwitchFlow(): Flow<TwitchMessage> =
         super.getTwitchFlow()
             .filterChannelUser(predicate)
 }

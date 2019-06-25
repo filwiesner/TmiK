@@ -24,7 +24,7 @@ class FilterScope(
      */
     infix fun withPredicate(filter: suspend (TwitchMessage) -> Boolean) { predicate = filter }
 
-    override suspend fun getTwitchFlow(): Flow<TwitchMessage> =
+    override fun getTwitchFlow(): Flow<TwitchMessage> =
         super.getTwitchFlow()
             .filter(predicate)
 }
