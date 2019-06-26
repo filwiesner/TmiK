@@ -8,8 +8,6 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlin.coroutines.CoroutineContext
 import kotlin.jvm.Synchronized
 
@@ -39,18 +37,14 @@ class FlowDispenser <T> (
     private val flows = mutableListOf<FlowCallback<T>>()
     private var job: Job? = null
 
-    private val mutex = Mutex()
-
     /** When called, [FlowDispenser] will start to consume [inChannel] events */
     fun initialize() {
         if (running) return
         job = launch {
             try {
                 for (value in inChannel) {
-                    mutex.withLock {
-                        flows.forEach {
-                            it.onNextValue(value)
-                        }
+                    flows.forEach {
+                        it.onNextValue(value)
                     }
                 }
             } catch (t: Throwable) {
@@ -72,15 +66,12 @@ class FlowDispenser <T> (
             { offer(it) },
             { close(it ?: FinishedSourceException()) }
         )
-
-        mutex.withLock { flows.add(callback) }
+        addCallback(callback)
 
         if (inChannel.isClosedForReceive)
             channel.close()
 
-        awaitClose { launch {
-            mutex.withLock { flows.remove(callback) }
-        } }
+        awaitClose { removeCallback(callback) }
     }
 
     /** true if [inChannel] events are consumed */
