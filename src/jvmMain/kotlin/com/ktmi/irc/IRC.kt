@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 import okhttp3.*
 import kotlin.coroutines.CoroutineContext
 
+/** Actual implementation of TwitchIRC interface for JVM */
 actual class IRC actual constructor(
     private val token: String,
     private val username: String,

@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 import org.w3c.dom.MessageEvent
 import kotlin.coroutines.CoroutineContext
 
-
+/** Actual implementation of TwitchIRC interface for Javascript */
 actual class IRC actual constructor(
     private val token: String,
     private val username: String,
@@ -34,9 +34,9 @@ actual class IRC actual constructor(
         val port = if (secure) 443 else 80
         val protocol = if (secure) "wss" else "ws"
 
-        ws = WebSocket("$protocol://irc-ws.chat.twitch.tv:$port")
-
-        ws!!.apply {
+        ws = WebSocket(
+            "$protocol://irc-ws.chat.twitch.tv:$port"
+        ).apply {
             onopen = {
                 setState(CONNECTING)
                 authorize(token, username)

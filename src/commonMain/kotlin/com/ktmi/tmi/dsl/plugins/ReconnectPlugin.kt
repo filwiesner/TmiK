@@ -67,7 +67,7 @@ fun Container.Reconnect(attempts: Int = 0, interval: Long = 10_000) = object : T
         } catch (e: CancellationException) {}
     }
 
-    private fun rejoinChannels() {
-        launch { activeChannels.forEach { join(it) } }
-    }
+    private fun rejoinChannels() { launch {
+        activeChannels.forEach { join(it) }
+    } }
 }

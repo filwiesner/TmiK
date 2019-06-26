@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlin.coroutines.CoroutineContext
 
+/** Expected implementation of TwitchIRC interface for different platform targets */
 expect class IRC(
     token: String,
     username: String = "blank",

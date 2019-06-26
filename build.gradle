@@ -7,11 +7,10 @@ plugins {
 repositories {
     mavenCentral()
     jcenter()
-    maven { url = uri("https://kotlin.bintray.com/ktor") }
 }
 
 group 'com.tmik'
-version '0.0.5'
+version '0.0.6'
 
 apply plugin: 'maven-publish'
 
@@ -29,9 +28,6 @@ kotlin {
         commonMain {
             dependencies {
                 implementation kotlin('stdlib-common')
-
-//                implementation "io.ktor:ktor-client-websockets:$ktor_version"
-//                implementation "io.ktor:ktor-network:$ktor_version"
                 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutines_version"
             }
         }
