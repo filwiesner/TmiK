@@ -34,31 +34,28 @@ class FlowDispenser <T> (
     val inChannel: ReceiveChannel<T>,
     override val coroutineContext: CoroutineContext
 ) : CoroutineScope {
-    private val flows = mutableListOf<FlowCallback<T>>()
+    private val _flows = mutableListOf<FlowCallback<T>>()
     private var job: Job? = null
+
+    @Synchronized
+    private fun changeState(block: (MutableList<FlowCallback<T>>) -> Unit) = block(_flows)
 
     /** When called, [FlowDispenser] will start to consume [inChannel] events */
     fun initialize() {
         if (running) return
         job = launch {
             try {
-                for (value in inChannel) {
-                    flows.forEach {
-                        it.onNextValue(value)
+                for (value in inChannel)
+                    changeState { flows ->
+                        flows.forEach { it.onNextValue(value) }
                     }
-                }
             } catch (t: Throwable) {
-                flows.forEach { it.onClose(t) }
+                changeState { flows ->
+                    flows.forEach { it.onClose(t) }
+                }
             }
         }
     }
-
-    @Synchronized
-    private fun addCallback(callback: FlowCallback<T>) = flows.add(callback)
-
-    @Synchronized
-    private fun removeCallback(callback: FlowCallback<T>) = flows.remove(callback)
-
 
     /** Creates one [Flow] listening to [inChannel] */
     fun requestFlow() = callbackFlow<T> {
@@ -66,12 +63,16 @@ class FlowDispenser <T> (
             { offer(it) },
             { close(it ?: FinishedSourceException()) }
         )
-        addCallback(callback)
+        changeState { flows ->
+            flows.add(callback)
+        }
 
         if (inChannel.isClosedForReceive)
             channel.close()
 
-        awaitClose { removeCallback(callback) }
+        awaitClose { changeState { flows ->
+            flows.remove(callback)
+        } }
     }
 
     /** true if [inChannel] events are consumed */
@@ -85,5 +86,7 @@ class FlowDispenser <T> (
     /** clears all requested [Flow]s.
      * @see requestFlow
      */
-    fun clear() = flows.clear()
+    fun clear() = changeState { flows ->
+        flows.clear()
+    }
 }
