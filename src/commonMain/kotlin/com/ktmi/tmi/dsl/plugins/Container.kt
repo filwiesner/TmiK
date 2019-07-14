@@ -2,6 +2,7 @@ package com.ktmi.tmi.dsl.plugins
 
 import com.ktmi.irc.IrcState
 import com.ktmi.tmi.client.TmiClient
+import com.ktmi.tmi.dsl.builder.GlobalContextScope
 import com.ktmi.tmi.dsl.builder.TmiStateProvider
 import com.ktmi.tmi.dsl.builder.TwitchDsl
 import com.ktmi.tmi.dsl.builder.TwitchScope
@@ -25,7 +26,7 @@ open class Container(
     parent: TwitchScope?,
     context: CoroutineContext,
     client: TmiStateProvider? = null
-) : TwitchScope(parent, context + CoroutineName("Container")),
+) : GlobalContextScope(parent, context + CoroutineName("Container")),
     TmiStateProvider {
 
     private val provider: TmiStateProvider

@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -54,14 +55,28 @@ abstract class TwitchScope(
 }
 
 /**
+ * Scope where all events are available
+ */
+abstract class GlobalContextScope(
+    parent: TwitchScope?,
+    context: CoroutineContext
+) : TwitchScope(parent, context)
+
+/**
  * Scope where all events are in relation to some **channel**
  * Events available: [JoinMessage], [LeaveMessage], [UserStateMessage], [RoomStateMessage],
  * [TextMessage], [ClearChatMessage], [ClearMessage], [NoticeMessage] and [UserNoticeMessage]
  */
 abstract class ChannelContextScope(
+    val channel: String,
     parent: TwitchScope?,
     context: CoroutineContext
-) : TwitchScope(parent, context)
+) : TwitchScope(parent, context) {
+    override fun getTwitchFlow(): Flow<TwitchMessage> {
+        return super.getTwitchFlow()
+            .filter { it.rawMessage.channel == channel.asChannelName }
+    }
+}
 
 /**
  * Scope where all events are in relation to some **user**
@@ -69,9 +84,24 @@ abstract class ChannelContextScope(
  * [ClearChatMessage], [ClearMessage] and [UserNoticeMessage]
  */
 abstract class UserContextScope(
+    username: String,
     parent: TwitchScope?,
     context: CoroutineContext
-) : TwitchScope(parent, context)
+) : TwitchScope(parent, context) {
+    private val lowerUser = username.toLowerCase()
+
+    override fun getTwitchFlow(): Flow<TwitchMessage> {
+        return super.getTwitchFlow()
+            .filter { it.rawMessage.author == lowerUser
+                    ||it.rawMessage.tags["login"] == lowerUser
+                    ||it.rawMessage.tags["display-name"]?.toLowerCase() == lowerUser
+                    ||(it is JoinMessage && it.username == lowerUser)
+                    ||(it is LeaveMessage && it.username == lowerUser)
+                    ||(it is ClearChatMessage && it.bannedUser == lowerUser)
+            }
+
+    }
+}
 
 /**
  * Scope where all events are in relation to **UserState**

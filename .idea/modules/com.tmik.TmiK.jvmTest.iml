@@ -4,9 +4,9 @@
     <facet type="kotlin-language" name="Kotlin">
       <configuration version="3" platform="JVM 1.6" useProjectSettings="false" isTestModule="true" externalProjectId="TmiK">
         <sourceSets>
+          <sourceSet>com.tmik.TmiK.commonMain</sourceSet>
           <sourceSet>com.tmik.TmiK.jvmMain</sourceSet>
           <sourceSet>com.tmik.TmiK.commonTest</sourceSet>
-          <sourceSet>com.tmik.TmiK.commonMain</sourceSet>
         </sourceSets>
         <newMppModelJpsModuleKind>COMPILATION_AND_SOURCE_SET_HOLDER</newMppModelJpsModuleKind>
         <compilerSettings>

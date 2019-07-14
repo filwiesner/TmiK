@@ -27,14 +27,6 @@ inline fun <reified T : TwitchMessage> Flow<TwitchMessage>.filterMessage(): Flow
 }
 
 /**
- * Filters [Flow] of [TwitchMessage]s to pass only [UserStateRelated] messages that matches given predicate
- * @param filter predicate used for filtering
- */
-inline fun Flow<TwitchMessage>.filterChannelUser(
-    crossinline filter: suspend (UserStateRelated) -> Boolean
-): Flow<TwitchMessage> = this.filter { it is UserStateRelated && filter(it) }
-
-/**
  * Transforms [RawMessage] flow to [TwitchMessage] flow
  */
 val Flow<RawMessage>.asTwitchMessageFlow: Flow<TwitchMessage> get() = map {
@@ -69,98 +61,105 @@ inline fun <reified T : TwitchMessage> TwitchScope.onTwitchMessage(
 }
 
 /** Registers a listener for [GlobalUserStateMessage] */
-inline fun MainScope.onGlobalUserState(crossinline action: suspend (GlobalUserStateMessage) -> Unit) =
+inline fun GlobalContextScope.onGlobalUserState(crossinline action: suspend (GlobalUserStateMessage) -> Unit) =
     onTwitchMessage(action)
 
 /** Registers a listener for [JoinMessage] */
-inline fun MainScope.onUserJoin(crossinline action: suspend (JoinMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun GlobalContextScope.onUserJoin(crossinline action: suspend UserContext.(JoinMessage) -> Unit) =
+    onTwitchMessage<JoinMessage> { mess -> UserContext(mess.username, mess.channel).apply { action(mess) } }
 /** Registers a listener for [JoinMessage] */
-inline fun ChannelContextScope.onUserJoin(crossinline action: suspend (JoinMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun ChannelContextScope.onUserJoin(crossinline action: suspend UserContext.(JoinMessage) -> Unit) =
+    onTwitchMessage<JoinMessage> { mess -> UserContext(mess.username, mess.channel).apply { action(mess) } }
 /** Registers a listener for [JoinMessage] */
-inline fun UserContextScope.onUserJoin(crossinline action: suspend (JoinMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun UserContextScope.onUserJoin(crossinline action: suspend UserContext.(JoinMessage) -> Unit) =
+    onTwitchMessage<JoinMessage> { mess -> UserContext(mess.username, mess.channel).apply { action(mess) } }
 
 /** Registers a listener for [LeaveMessage] */
-inline fun MainScope.onUserLeave(crossinline action: suspend (LeaveMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun GlobalContextScope.onUserLeave(crossinline action: suspend UserContext.(LeaveMessage) -> Unit) =
+    onTwitchMessage<LeaveMessage> { mess -> UserContext(mess.username, mess.channel).apply { action(mess) } }
 /** Registers a listener for [LeaveMessage] */
-inline fun ChannelContextScope.onUserLeave(crossinline action: suspend (LeaveMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun ChannelContextScope.onUserLeave(crossinline action: suspend UserContext.(LeaveMessage) -> Unit) =
+    onTwitchMessage<LeaveMessage> { mess -> UserContext(mess.username, mess.channel).apply { action(mess) } }
 /** Registers a listener for [LeaveMessage] */
-inline fun UserContextScope.onUserLeave(crossinline action: suspend (LeaveMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun UserContextScope.onUserLeave(crossinline action: suspend UserContext.(LeaveMessage) -> Unit) =
+    onTwitchMessage<LeaveMessage> { mess -> UserContext(mess.username, mess.channel).apply { action(mess) } }
 
 /** Registers a listener for [UserStateMessage] */
-inline fun MainScope.onUserState(crossinline action: suspend (UserStateMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun GlobalContextScope.onUserState(crossinline action: suspend UserContext.(UserStateMessage) -> Unit) =
+    onTwitchMessage<UserStateMessage> { mess -> UserContext(mess.username, mess.channel).apply { action(mess) } }
 /** Registers a listener for [UserStateMessage] */
-inline fun ChannelContextScope.onUserState(crossinline action: suspend (UserStateMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun ChannelContextScope.onUserState(crossinline action: suspend UserContext.(UserStateMessage) -> Unit) =
+    onTwitchMessage<UserStateMessage> { mess -> UserContext(mess.username, mess.channel).apply { action(mess) } }
 /** Registers a listener for [UserStateMessage] */
-inline fun UserContextScope.onUserState(crossinline action: suspend (UserStateMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun UserContextScope.onUserState(crossinline action: suspend UserContext.(UserStateMessage) -> Unit) =
+    onTwitchMessage<UserStateMessage> { mess -> UserContext(mess.username, mess.channel).apply { action(mess) } }
 /** Registers a listener for [UserStateMessage] */
-inline fun UserStateContextScope.onUserState(crossinline action: suspend (UserStateMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun UserStateContextScope.onUserState(crossinline action: suspend UserContext.(UserStateMessage) -> Unit) =
+    onTwitchMessage<UserStateMessage> { mess -> UserContext(mess.username, mess.channel).apply { action(mess) } }
 
 /** Registers a listener for [RoomStateMessage] */
-inline fun MainScope.onRoomState(crossinline action: suspend (RoomStateMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun GlobalContextScope.onRoomState(crossinline action: suspend ChannelContext.(RoomStateMessage) -> Unit) =
+    onTwitchMessage<RoomStateMessage> { mess -> ChannelContext(mess.channel).apply { action(mess) } }
 /** Registers a listener for [RoomStateMessage] */
-inline fun ChannelContextScope.onRoomState(crossinline action: suspend (RoomStateMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun ChannelContextScope.onRoomState(crossinline action: suspend ChannelContext.(RoomStateMessage) -> Unit) =
+    onTwitchMessage<RoomStateMessage> { mess -> ChannelContext(mess.channel).apply { action(mess) } }
 
 /** Registers a listener for [TextMessage] */
-inline fun MainScope.onMessage(crossinline action: suspend (TextMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun GlobalContextScope.onMessage(crossinline action: suspend UserContext.(TextMessage) -> Unit) =
+    onTwitchMessage<TextMessage> { mess -> UserContext(mess.username, mess.channel).apply { action(mess) } }
 /** Registers a listener for [TextMessage] */
-inline fun ChannelContextScope.onMessage(crossinline action: suspend (TextMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun ChannelContextScope.onMessage(crossinline action: suspend UserContext.(TextMessage) -> Unit) =
+    onTwitchMessage<TextMessage> { mess -> UserContext(mess.username, mess.channel).apply { action(mess) } }
 /** Registers a listener for [TextMessage] */
-inline fun UserContextScope.onMessage(crossinline action: suspend (TextMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun UserContextScope.onMessage(crossinline action: suspend UserContext.(TextMessage) -> Unit) =
+    onTwitchMessage<TextMessage> { mess -> UserContext(mess.username, mess.channel).apply { action(mess) } }
 /** Registers a listener for [TextMessage] */
-inline fun UserStateContextScope.onMessage(crossinline action: suspend (TextMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun UserStateContextScope.onMessage(crossinline action: suspend UserContext.(TextMessage) -> Unit) =
+    onTwitchMessage<TextMessage> { mess -> UserContext(mess.username, mess.channel).apply { action(mess) } }
 
 /** Registers a listener for [ClearChatMessage] */
-inline fun MainScope.onClearChat(crossinline action: suspend (ClearChatMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun GlobalContextScope.onClearChat(crossinline action: suspend ChannelContext.(ClearChatMessage) -> Unit) =
+    onTwitchMessage<ClearChatMessage> { mess -> ChannelContext(mess.channel).apply { action(mess) } }
 /** Registers a listener for [ClearChatMessage] */
-inline fun ChannelContextScope.onClearChat(crossinline action: suspend (ClearChatMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun ChannelContextScope.onClearChat(crossinline action: suspend ChannelContext.(ClearChatMessage) -> Unit) =
+    onTwitchMessage<ClearChatMessage> { mess -> ChannelContext(mess.channel).apply { action(mess) } }
 /** Registers a listener for [ClearChatMessage] */
-inline fun UserContextScope.onClearChat(crossinline action: suspend (ClearChatMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun UserContextScope.onClearChat(crossinline action: suspend ChannelContext.(ClearChatMessage) -> Unit) =
+    onTwitchMessage<ClearChatMessage> { mess -> ChannelContext(mess.channel).apply { action(mess) } }
 
 /** Registers a listener for [ClearMessage] */
-inline fun MainScope.onClearMessage(crossinline action: suspend (ClearMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun GlobalContextScope.onClearMessage(crossinline action: suspend ChannelContext.(ClearMessage) -> Unit) =
+    onTwitchMessage<ClearMessage> { mess -> ChannelContext(mess.channel).apply { action(mess) } }
 /** Registers a listener for [ClearMessage] */
-inline fun ChannelContextScope.onClearMessage(crossinline action: suspend (ClearMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun ChannelContextScope.onClearMessage(crossinline action: suspend ChannelContext.(ClearMessage) -> Unit) =
+    onTwitchMessage<ClearMessage> { mess -> ChannelContext(mess.channel).apply { action(mess) } }
 /** Registers a listener for [ClearMessage] */
-inline fun UserContextScope.onClearMessage(crossinline action: suspend (ClearMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun UserContextScope.onClearMessage(crossinline action: suspend ChannelContext.(ClearMessage) -> Unit) =
+    onTwitchMessage<ClearMessage> { mess -> ChannelContext(mess.channel).apply { action(mess) } }
 
 /** Registers a listener for [NoticeMessage] */
-inline fun MainScope.onNotice(crossinline action: suspend (NoticeMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun GlobalContextScope.onNotice(crossinline action: suspend ChannelContext.(NoticeMessage) -> Unit) =
+    onTwitchMessage<NoticeMessage> { mess -> ChannelContext(mess.channel).apply { action(mess) } }
 /** Registers a listener for [NoticeMessage] */
-inline fun ChannelContextScope.onNotice(crossinline action: suspend (NoticeMessage) -> Unit) =
-    onTwitchMessage(action)
+inline fun ChannelContextScope.onNotice(crossinline action: suspend ChannelContext.(NoticeMessage) -> Unit) =
+    onTwitchMessage<NoticeMessage> { mess -> ChannelContext(mess.channel).apply { action(mess) } }
 
 /** Registers a listener for [UserNoticeMessage] */
-inline fun MainScope.onUserNotice(crossinline action: suspend (UserNoticeMessage) -> Unit) =
+inline fun GlobalContextScope.onUserNotice(crossinline action: suspend UserContext.(UserNoticeMessage) -> Unit) =
+    onTwitchMessage<UserNoticeMessage> { mess -> UserContext(mess.username, mess.channel).apply { action(mess) } }
+/** Registers a listener for [UserNoticeMessage] */
+inline fun ChannelContextScope.onUserNotice(crossinline action: suspend UserContext.(UserNoticeMessage) -> Unit) =
+    onTwitchMessage<UserNoticeMessage> { mess -> UserContext(mess.username, mess.channel).apply { action(mess) } }
+/** Registers a listener for [UserNoticeMessage] */
+inline fun UserContextScope.onUserNotice(crossinline action: suspend UserContext.(UserNoticeMessage) -> Unit) =
+    onTwitchMessage<UserNoticeMessage> { mess -> UserContext(mess.username, mess.channel).apply { action(mess) } }
+/** Registers a listener for [UserNoticeMessage] */
+inline fun UserStateContextScope.onUserNotice(crossinline action: suspend UserContext.(UserNoticeMessage) -> Unit) =
+    onTwitchMessage<UserNoticeMessage> { mess -> UserContext(mess.username, mess.channel).apply { action(mess) } }
+
+/** Registers a listener for [UserNoticeMessage] */
+inline fun GlobalContextScope.onWhisper(crossinline action: suspend (WhisperMessage) -> Unit) =
     onTwitchMessage(action)
 /** Registers a listener for [UserNoticeMessage] */
-inline fun ChannelContextScope.onUserNotice(crossinline action: suspend (UserNoticeMessage) -> Unit) =
-    onTwitchMessage(action)
-/** Registers a listener for [UserNoticeMessage] */
-inline fun UserContextScope.onUserNotice(crossinline action: suspend (UserNoticeMessage) -> Unit) =
-    onTwitchMessage(action)
-/** Registers a listener for [UserNoticeMessage] */
-inline fun UserStateContextScope.onUserNotice(crossinline action: suspend (UserNoticeMessage) -> Unit) =
+inline fun UserContextScope.onWhisper(crossinline action: suspend (WhisperMessage) -> Unit) =
     onTwitchMessage(action)

@@ -20,7 +20,7 @@ sealed class TwitchMessage(
  * This message can be: [UserStateMessage], [TextMessage] or [UserNoticeMessage]
  */
 interface UserStateRelated {
-    val channel: String?
+    val channel: String
     val badgeInfo: String?
     val badges: Map<String, Int>?
     val color: String?
@@ -188,6 +188,7 @@ class ClearMessage(
 ) : TwitchMessage(rawMessage, "CLEARMSG") {
     val channel get() = _channel
         ?: throw CorruptedMessageException(rawMessage, "channel not available")
+    /** Name of user who wrote deleted message */
     val username get() = _login
         ?: throw CorruptedMessageException(rawMessage, "user not available")
     val message get() = _text
@@ -233,6 +234,7 @@ class UserNoticeMessage(
     val emotes get() = _emotes
     val messageId get() = _id
         ?: throw CorruptedMessageException(rawMessage, "id not available")
+    /** The name of the user who sent the notice */
     override val username get() = _login
         ?: throw CorruptedMessageException(rawMessage, "login not available")
     override val isMod get() = _isMod
@@ -245,6 +247,29 @@ class UserNoticeMessage(
     val timestamp get() = _timestamp
         ?: throw CorruptedMessageException(rawMessage, "timestamp not available")
     val userId get() = _userId
+}
+
+/**
+ * Identifies whisper sent by some user
+ * @throws CorruptedMessageException when some property is not present
+ * @throws WrongMessageTypeException thrown if command in [RawMessage] does not match given command
+ */
+class WhisperMessage(
+    rawMessage: RawMessage
+) : TwitchMessage(rawMessage, "WHISPER") {
+    val badges get() = _badges
+    val color get() = _color
+    val displayName get() = _displayName
+    val emotes get() = _emotes
+    val messageId get() = rawMessage.tags["message-id"]
+        ?: throw CorruptedMessageException(rawMessage, "messageId not available")
+    val threadId get() = rawMessage.tags["thread-id"]?.toLongOrNull()
+        ?: throw CorruptedMessageException(rawMessage, "threadId not available")
+    val userId get() = _userId
+        ?: throw CorruptedMessageException(rawMessage, "UserId not available")
+    val message get() = _text
+        ?: throw CorruptedMessageException(rawMessage, "message not available")
+    val username get() = _username
 }
 
 /**
