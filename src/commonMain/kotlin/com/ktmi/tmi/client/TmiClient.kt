@@ -1,10 +1,14 @@
 package com.ktmi.tmi.client
 
-import com.ktmi.irc.*
-import com.ktmi.irc.IrcState.*
+import com.ktmi.irc.IRC
+import com.ktmi.irc.IrcState
+import com.ktmi.irc.IrcState.CONNECTED
+import com.ktmi.irc.RawMessage
+import com.ktmi.irc.TwitchIRC
 import com.ktmi.tmi.dsl.builder.TmiStateProvider
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlin.coroutines.CoroutineContext
 
 /**

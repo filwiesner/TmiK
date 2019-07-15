@@ -1,7 +1,6 @@
 package com.ktmi.tmi.client.commands
 
 import com.ktmi.tmi.dsl.builder.TwitchScope
-import com.ktmi.tmi.messages.asChannelName
 
 /**
  * This command will color your text based on your chat name color.

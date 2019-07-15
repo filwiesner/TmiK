@@ -2,8 +2,13 @@ package com.ktmi.tmi.client.events
 
 import com.ktmi.tmi.client.commands.*
 import com.ktmi.tmi.dsl.builder.TwitchScope
+import com.ktmi.tmi.messages.TwitchMessage
 
-open class ChannelContext(
+/**
+ * Context of received message that exposes helper functions for channel it's received from
+ */
+open class ChannelContext<T: TwitchMessage>(
+    val message: T,
     val channel: String
 ) {
     /** Sends message to channel in this context */
@@ -92,10 +97,14 @@ open class ChannelContext(
     fun TwitchScope.unvip(user: String) = unvip(channel, user)
 }
 
-open class UserContext(
+/**
+ * Context of received message that exposes helper functions for channel and user it's received from
+ */
+open class UserContext<T: TwitchMessage>(
+    message: T,
     val username: String?,
     channel: String
-) : ChannelContext(channel) {
+) : ChannelContext<T>(message, channel) {
 
     /** This command will allow you to permanently ban a user from chat room in this context */
     fun TwitchScope.ban() {

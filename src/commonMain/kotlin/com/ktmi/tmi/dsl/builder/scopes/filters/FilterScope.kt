@@ -2,7 +2,7 @@ package com.ktmi.tmi.dsl.builder.scopes.filters
 
 import com.ktmi.tmi.dsl.builder.TwitchDsl
 import com.ktmi.tmi.dsl.builder.TwitchScope
-import com.ktmi.tmi.messages.*
+import com.ktmi.tmi.messages.TwitchMessage
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter

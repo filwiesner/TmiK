@@ -1,7 +1,6 @@
 package com.ktmi.tmi.dsl.plugins
 
 import com.ktmi.irc.IrcState
-import com.ktmi.tmi.client.TmiClient
 import com.ktmi.tmi.dsl.builder.GlobalContextScope
 import com.ktmi.tmi.dsl.builder.TmiStateProvider
 import com.ktmi.tmi.dsl.builder.TwitchDsl

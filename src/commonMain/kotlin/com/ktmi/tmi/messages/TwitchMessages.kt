@@ -221,7 +221,7 @@ class NoticeMessage(
  * @throws CorruptedMessageException when some property is not present
  * @throws WrongMessageTypeException thrown if command in [RawMessage] does not match given command
  */
-class UserNoticeMessage(
+open class UserNoticeMessage(
     rawMessage: RawMessage
 ) : TwitchMessage(rawMessage, "USERNOTICE"), UserStateRelated {
     override val channel get() = _channel

@@ -3,15 +3,12 @@ package com.ktmi.tmi.dsl.builder.scopes
 import com.ktmi.tmi.dsl.builder.ChannelContextScope
 import com.ktmi.tmi.dsl.builder.TwitchDsl
 import com.ktmi.tmi.dsl.builder.TwitchScope
-import com.ktmi.tmi.client.commands.*
 import com.ktmi.tmi.messages.TwitchMessage
 import com.ktmi.tmi.messages.asChannelName
 import com.ktmi.tmi.messages.channelAsUsername
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filter
 import kotlin.coroutines.CoroutineContext
-
 
 /**
  * [TwitchDsl] scope used to filter out messages by username

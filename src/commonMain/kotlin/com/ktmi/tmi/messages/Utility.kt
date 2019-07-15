@@ -1,7 +1,7 @@
 package com.ktmi.tmi.messages
 
-import com.ktmi.irc.TwitchIRC
 import com.ktmi.irc.RawMessage
+import com.ktmi.irc.TwitchIRC
 
 /**
  * Makes string valid channel name in [TwitchIRC].

@@ -3,10 +3,9 @@ package com.ktmi.tmi.dsl.builder.scopes
 import com.ktmi.tmi.dsl.builder.TwitchDsl
 import com.ktmi.tmi.dsl.builder.TwitchScope
 import com.ktmi.tmi.dsl.builder.UserContextScope
-import com.ktmi.tmi.messages.*
+import com.ktmi.tmi.messages.TwitchMessage
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filter
 import kotlin.coroutines.CoroutineContext
 
 /**
