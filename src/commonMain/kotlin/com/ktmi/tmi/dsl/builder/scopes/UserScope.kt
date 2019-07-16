@@ -3,10 +3,9 @@ package com.ktmi.tmi.dsl.builder.scopes
 import com.ktmi.tmi.dsl.builder.TwitchDsl
 import com.ktmi.tmi.dsl.builder.TwitchScope
 import com.ktmi.tmi.dsl.builder.UserContextScope
-import com.ktmi.tmi.messages.*
+import com.ktmi.tmi.messages.TwitchMessage
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filter
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -16,24 +15,10 @@ import kotlin.coroutines.CoroutineContext
  * @param coroutineContext [CoroutineContext] used for creating [TwitchMessage] listeners
  */
 class UserScope(
-    val user: String,
+    username: String,
     parent: TwitchScope,
     coroutineContext: CoroutineContext
-) : UserContextScope(parent,coroutineContext + CoroutineName("UserTwitch")) {
-    private val lowerUser = user.toLowerCase()
-
-    override fun getTwitchFlow(): Flow<TwitchMessage> {
-        return super.getTwitchFlow()
-            .filter { it.rawMessage.author == lowerUser
-                    ||it.rawMessage.tags["login"] == lowerUser
-                    ||it.rawMessage.tags["display-name"]?.toLowerCase() == lowerUser
-                    ||(it is JoinMessage && it.username == lowerUser)
-                    ||(it is LeaveMessage && it.username == lowerUser)
-                    ||(it is ClearChatMessage && it.bannedUser == lowerUser)
-            }
-
-    }
-}
+) : UserContextScope(username, parent,coroutineContext + CoroutineName("UserTwitch"))
 
 /**
  * [TwitchDsl] builder function for [UserScope]

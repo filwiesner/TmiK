@@ -24,6 +24,11 @@ private data class FlowCallback <T> (
  */
 class FinishedSourceException : Exception("Source channel has finished sending messages")
 
+//private sealed class DispenserActor
+//private class Add<T>(val callback: FlowCallback<T>) : DispenserActor()
+//private class Remove<T>(val callback: FlowCallback<T>) : DispenserActor()
+//private class NotifyAll<T>(val value: T) : DispenserActor()
+
 /**
  * Turns [Channel] into [Flow]. Holds [FlowCallback]s that will be notified of new value or channel closing.
  * Consumes events in given [Flow]
