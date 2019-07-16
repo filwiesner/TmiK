@@ -288,4 +288,4 @@ class WrongMessageTypeException(msg: String) : Exception(msg)
 class CorruptedMessageException(
     val msg: RawMessage,
     reason: String
-) : Exception("${msg.commandName} message corrupted: $reason")
+) : Exception("${msg.commandName} message corrupted: $reason \n $msg")

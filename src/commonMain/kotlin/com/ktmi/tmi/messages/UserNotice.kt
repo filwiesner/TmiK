@@ -18,8 +18,7 @@ class SubMessage(message: UserNoticeMessage) : UserNoticeMessage(message.rawMess
     val cumulativeMonths: Int get() = rawMessage.tags["msg-param-cumulative-months"]?.toInt()
         ?: throw CorruptedMessageException(rawMessage, "cumulative months not found or not a number")
     val streakShared: Boolean get() = rawMessage.tags["msg-param-should-share-streak"] == "1"
-    val streak: Int get() = rawMessage.tags["msg-param-streak-months"]?.toInt()
-        ?: throw CorruptedMessageException(rawMessage, "streak not found or not a number")
+    val streak: Int? get() = rawMessage.tags["msg-param-streak-months"]?.toInt()
     val subPlan: SubPlan get() = SubPlan.parse(rawMessage.tags["msg-param-sub-plan"] ?: "")
     val subPlanName: String get() = rawMessage.tags["msg-param-sub-plan-name"]
         ?: throw CorruptedMessageException(rawMessage, "sub plan name not found")
