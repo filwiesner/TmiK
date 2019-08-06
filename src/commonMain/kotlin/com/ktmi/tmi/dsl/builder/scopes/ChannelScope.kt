@@ -30,11 +30,3 @@ class ChannelScope(
 @TwitchDsl
 inline fun TwitchScope.channel(channel: String, block: ChannelScope.() -> Unit) =
     ChannelScope(channel, this, coroutineContext).apply(block)
-
-/**
- * [TwitchDsl] builder function for [ChannelScope] what creates [UserScope] with channel broadcaster as filter
- * @param block body of the DSL ([ChannelScope])
- */
-@TwitchDsl
-inline fun ChannelScope.broadcaster(block: UserScope.() -> Unit) =
-    UserScope(channel.channelAsUsername, this, coroutineContext).apply(block)
