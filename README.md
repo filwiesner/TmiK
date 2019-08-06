@@ -10,21 +10,20 @@ Simple DSL for interacting with Twitch chat
 ## State
 Only **JVM** and **JS** are targeted but I hope I will be able to add **Native** in the future.  
  
-
 ## Example
-With help of some Kotlin features I was able to create simple DSL:
+Example of simple bot
 ```kotlin
-tmi("oauth:token") {
+tmi(token) {
     + Reconnect(5) // Tries to reconnect for five times if network fails (and re-joins all channels)
- 
-    onRoomState { println("Joined ${it.channel}") }
+
+    onRoomState { println("Joined $channel") }
 
     channel("mychannel") {
 
         broadcaster { // Filters only events by/for broadcaster
             onMessage {
-                if (it.message == "hello")
-                    this@channel.action("Hello ${it.displayName}")
+                if (text == "hello")
+                    action("Hello ${message.displayName}")
             }
         }
 
@@ -33,11 +32,15 @@ tmi("oauth:token") {
             withPredicate { !it.isMod }
 
             onMessage {
-                if (it.message.contains("bannedword")) {
-                    this@channel.sendMessage("Hey, you can't use that word @${it.displayName}!")
-                    this@channel.timeout(it.username)
+                if (text.contains("bannedword")) {
+                    sendMessage("Hey, you can't use that word @${message.displayName}!")
+                    timeout()
                 }
             }
+        }
+
+        onRaid {
+            sendMessage("Hello ${message.sourceDisplayName}! Thanks for the raid!")
         }
     }
 
@@ -53,8 +56,8 @@ repositories {
 }
 
 dependencies {
-    implementation "com.tmik:TmiK-jvm:0.0.7" // For JVM
+    implementation "com.tmik:TmiK-jvm:0.0.8" // For JVM
     // OR
-    implementation "com.tmik:TmiK-js:0.0.7" // For Kotlin/JS
+    implementation "com.tmik:TmiK-js:0.0.8" // For JS
 }
 ```

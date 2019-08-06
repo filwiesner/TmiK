@@ -11,6 +11,8 @@ open class ChannelContext<T: TwitchMessage>(
     val message: T,
     val channel: String
 ) {
+    val text get() = message.rawMessage.text ?: ""
+
     /** Sends message to channel in this context */
     fun TwitchScope.sendMessage(text: String) = sendMessage(channel, text)
 
