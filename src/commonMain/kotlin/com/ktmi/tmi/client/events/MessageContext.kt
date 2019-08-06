@@ -19,6 +19,9 @@ open class ChannelContext<T: TwitchMessage>(
     /** Sends message to channel in this context and color your text based on your chat name color. */
     fun TwitchScope.action(text: String) = action(channel, text)
 
+    /** Sends a whisper message to user */
+    fun TwitchScope.whisper(username: String, message: String) = whisper(channel, username, message)
+
     /** This command will allow you to permanently ban a user from chat room in this context */
     fun TwitchScope.ban(user: String) = ban(channel, user)
 
@@ -107,6 +110,12 @@ open class UserContext<T: TwitchMessage>(
     val username: String?,
     channel: String
 ) : ChannelContext<T>(message, channel) {
+
+    /** Sends a whisper message to user */
+    fun TwitchScope.whisper(message: String) {
+        if (username != null)
+            whisper(username, message)
+    }
 
     /** This command will allow you to permanently ban a user from chat room in this context */
     fun TwitchScope.ban() {

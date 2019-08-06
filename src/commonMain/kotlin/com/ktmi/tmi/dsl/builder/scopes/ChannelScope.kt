@@ -5,7 +5,6 @@ import com.ktmi.tmi.dsl.builder.TwitchDsl
 import com.ktmi.tmi.dsl.builder.TwitchScope
 import com.ktmi.tmi.messages.TwitchMessage
 import com.ktmi.tmi.messages.asChannelName
-import com.ktmi.tmi.messages.channelAsUsername
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.flow.Flow
 import kotlin.coroutines.CoroutineContext
