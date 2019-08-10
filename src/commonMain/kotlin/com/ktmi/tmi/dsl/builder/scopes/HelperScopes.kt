@@ -5,10 +5,13 @@ package com.ktmi.tmi.dsl.builder.scopes
 import com.ktmi.tmi.dsl.builder.*
 import com.ktmi.tmi.dsl.builder.scopes.filters.filterUserState
 import com.ktmi.tmi.messages.channelAsUsername
+import com.ktmi.tmi.messages.isBroadcaster
+import com.ktmi.tmi.messages.isMod
+import com.ktmi.tmi.messages.isSubscriber
 
 @PublishedApi
 internal inline fun TwitchScope._broadcaster(block: UserStateContextScope.() -> Unit) = filterUserState {
-    withPredicate { it.channel.channelAsUsername == it.username}
+    withPredicate { it.isBroadcaster }
     block()
 }
 /** [TwitchDsl] builder function that creates [UserStateContextScope] with channel broadcaster as filter */
@@ -21,22 +24,29 @@ internal inline fun TwitchScope._broadcaster(block: UserStateContextScope.() -> 
 @TwitchDsl inline fun UserStateContextScope.broadcaster(block: UserStateContextScope.() -> Unit) = _broadcaster(block)
 
 @PublishedApi
-internal inline fun TwitchScope._moderators(block: UserStateContextScope.() -> Unit) = filterUserState {
-    withPredicate { it.isMod }
+internal inline fun TwitchScope._moderators(
+    includingBroadcaster: Boolean = true,
+    block: UserStateContextScope.() -> Unit
+) = filterUserState {
+    withPredicate { it.isMod || (includingBroadcaster && it.isBroadcaster) }
     block()
 }
 /** [TwitchDsl] builder function that creates [UserStateContextScope] with moderators as a filter */
-@TwitchDsl inline fun GlobalContextScope.moderators(block: UserStateContextScope.() -> Unit) = _moderators(block)
+@TwitchDsl inline fun GlobalContextScope.moderators(includingBroadcaster: Boolean = true, block: UserStateContextScope.() -> Unit)
+        = _moderators(includingBroadcaster, block)
 /** [TwitchDsl] builder function that creates [UserStateContextScope] with moderators as a filter */
-@TwitchDsl inline fun ChannelContextScope.moderators(block: UserStateContextScope.() -> Unit) = _moderators(block)
+@TwitchDsl inline fun ChannelContextScope.moderators(includingBroadcaster: Boolean = true, block: UserStateContextScope.() -> Unit)
+        = _moderators(includingBroadcaster, block)
 /** [TwitchDsl] builder function that creates [UserStateContextScope] with moderators as a filter */
-@TwitchDsl inline fun UserContextScope.moderators(block: UserStateContextScope.() -> Unit) = _moderators(block)
+@TwitchDsl inline fun UserContextScope.moderators(includingBroadcaster: Boolean = true, block: UserStateContextScope.() -> Unit)
+        = _moderators(includingBroadcaster, block)
 /** [TwitchDsl] builder function that creates [UserStateContextScope] with moderators as a filter */
-@TwitchDsl inline fun UserStateContextScope.moderators(block: UserStateContextScope.() -> Unit) = _moderators(block)
+@TwitchDsl inline fun UserStateContextScope.moderators(includingBroadcaster: Boolean = true, block: UserStateContextScope.() -> Unit)
+        = _moderators(includingBroadcaster, block)
 
 @PublishedApi
 internal inline fun TwitchScope._subscribers(block: UserStateContextScope.() -> Unit) = filterUserState {
-    withPredicate { it.badges?.containsKey("subscriber") == true }
+    withPredicate { it.isSubscriber }
     block()
 }
 /** [TwitchDsl] builder function that creates [UserStateContextScope] with subscribers as a filter */
