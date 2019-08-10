@@ -1,6 +1,6 @@
-package com.ktmi.tmi.client.events
+package com.ktmi.tmi.events
 
-import com.ktmi.tmi.client.commands.*
+import com.ktmi.tmi.commands.*
 import com.ktmi.tmi.dsl.builder.TwitchScope
 import com.ktmi.tmi.messages.TwitchMessage
 

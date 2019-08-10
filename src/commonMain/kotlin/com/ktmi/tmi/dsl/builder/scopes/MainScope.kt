@@ -4,7 +4,7 @@ import com.ktmi.irc.IrcState
 import com.ktmi.irc.RawMessage
 import com.ktmi.irc.TwitchIRC
 import com.ktmi.tmi.client.TmiClient
-import com.ktmi.tmi.client.events.asTwitchMessageFlow
+import com.ktmi.tmi.events.asTwitchMessageFlow
 import com.ktmi.tmi.dsl.builder.Container
 import com.ktmi.tmi.dsl.builder.TwitchDsl
 import com.ktmi.tmi.messages.TwitchMessage

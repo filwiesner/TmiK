@@ -3,7 +3,7 @@ package com.ktmi.tmi.dsl.plugins
 import com.ktmi.irc.IrcState
 import com.ktmi.irc.IrcState.*
 import com.ktmi.tmi.client.TmiClient
-import com.ktmi.tmi.client.commands.join
+import com.ktmi.tmi.commands.join
 import com.ktmi.tmi.dsl.builder.Container
 import com.ktmi.tmi.messages.JoinMessage
 import com.ktmi.tmi.messages.LeaveMessage

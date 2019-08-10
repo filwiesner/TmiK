@@ -1,4 +1,4 @@
-package com.ktmi.tmi.client.events
+package com.ktmi.tmi.events
 
 import com.ktmi.irc.IrcState
 import com.ktmi.tmi.dsl.builder.scopes.MainScope

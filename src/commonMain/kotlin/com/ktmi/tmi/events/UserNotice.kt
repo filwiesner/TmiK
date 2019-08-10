@@ -1,6 +1,6 @@
 @file:Suppress("unused", "FunctionName")
 
-package com.ktmi.tmi.client.events
+package com.ktmi.tmi.events
 
 import com.ktmi.tmi.dsl.builder.*
 import com.ktmi.tmi.messages.*

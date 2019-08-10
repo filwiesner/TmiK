@@ -10,7 +10,7 @@ repositories {
 }
 
 group 'com.tmik'
-version '0.0.9-exp1'
+version '0.0.9-exp2'
 
 apply plugin: 'maven-publish'
 
@@ -71,10 +71,11 @@ kotlin {
 bintray {
     user = project.hasProperty('btUser') ? btUser : "N/A"
     key = project.hasProperty('btKey') ? btKey : "N/A"
+    pckg = project.hasProperty('btPackage') ? btPackage : "N/A"
 
     pkg {
         repo = 'maven'
-        name = 'TmiK-experimental'
+        name = pckg//'TmiK-experimental'
         licenses = ['MIT']
         vcsUrl = 'https://github.com/wooodenleg/TmiK.git'
         issueTrackerUrl = 'https://github.com/wooodenleg/TmiK/issues'

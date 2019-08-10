@@ -1,4 +1,4 @@
-package com.ktmi.tmi.client.commands
+package com.ktmi.tmi.commands
 
 import com.ktmi.tmi.dsl.builder.TwitchScope
 import com.ktmi.tmi.messages.asChannelName

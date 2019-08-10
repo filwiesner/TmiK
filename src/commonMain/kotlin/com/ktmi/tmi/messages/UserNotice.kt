@@ -3,6 +3,7 @@ package com.ktmi.tmi.messages
 /** Subscription plan */
 enum class SubPlan { Prime, Tier1, Tier2, Tier3;
     companion object {
+        /** Parse sub plan name into Enum value */
         fun parse(plan: String): SubPlan = when(plan) {
             "Prime" -> Prime
             "1000" -> Tier1

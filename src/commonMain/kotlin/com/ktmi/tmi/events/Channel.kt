@@ -1,6 +1,6 @@
 @file:Suppress("unused", "EXPERIMENTAL_API_USAGE", "FunctionName")
 
-package com.ktmi.tmi.client.events
+package com.ktmi.tmi.events
 
 import com.ktmi.irc.RawMessage
 import com.ktmi.tmi.dsl.builder.*

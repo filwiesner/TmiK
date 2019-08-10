@@ -1,5 +1,5 @@
 # TmiK
-[![Download](https://api.bintray.com/packages/wooodenleg/maven/TmiK/images/download.svg)](https://bintray.com/wooodenleg/maven/TmiK/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/wooodenleg/maven/TmiK-experimental/images/download.svg?version=0.0.9-exp1) ](https://bintray.com/wooodenleg/maven/TmiK-experimental/_latestVersion)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/03cd61c9bd1f40a2baf416ae1c84ade6)](https://www.codacy.com/app/wooodenleg/TmiK?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=wooodenleg/TmiK&amp;utm_campaign=Badge_Grade)
 [![GitHub](https://img.shields.io/github/license/wooodenleg/TmiK.svg?color=blue)](https://github.com/wooodenleg/TmiK/blob/master/LICENSE)  
 **T**witch **m**essaging **i**n **K**otlin  
@@ -56,8 +56,8 @@ repositories {
 }
 
 dependencies {
-    implementation "com.tmik:TmiK-jvm:0.0.8" // For JVM
+    implementation "com.tmik:TmiK-jvm:0.0.9-exp1" // For JVM
     // OR
-    implementation "com.tmik:TmiK-js:0.0.8" // For JS
+    implementation "com.tmik:TmiK-js:0.0.9-exp1" // For JS
 }
 ```
