@@ -1,10 +1,8 @@
-package com.ktmi.tmi.dsl.plugins
+package com.ktmi.tmi.dsl.builder
 
 import com.ktmi.irc.IrcState
-import com.ktmi.tmi.dsl.builder.GlobalContextScope
-import com.ktmi.tmi.dsl.builder.TmiStateProvider
-import com.ktmi.tmi.dsl.builder.TwitchDsl
-import com.ktmi.tmi.dsl.builder.TwitchScope
+import com.ktmi.tmi.dsl.builder.scopes.TmiStateProvider
+import com.ktmi.tmi.dsl.plugins.TwitchPlugin
 import com.ktmi.tmi.messages.TwitchMessage
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +17,7 @@ import kotlin.coroutines.CoroutineContext
  * It's modifiable with [TwitchPlugin]s which can add plu&play functionality
  * @param parent parent scope where messages are forwarded and from  where main [Flow] of [TwitchMessage]s is retrieved
  * @param context [CoroutineContext] used for creating [TwitchMessage] listeners
- * @throws NoIrcStateHandlerException when ircStateFlow is not supplied and no parent is IrcStateProvider
+ * @throws NoTmiStateHandlerException when ircStateFlow is not supplied and no parent is IrcStateProvider
  */
 open class Container(
     parent: TwitchScope?,
@@ -35,13 +33,13 @@ open class Container(
         provider = client ?: run<TmiStateProvider> {
             var currentScope: TwitchScope? = this.parent
 
-            // Find parent who implements IrcStateProvider
+            // Find parent who implements TmiStateProvider
             while (currentScope != null && currentScope !is TmiStateProvider) {
                 currentScope = currentScope.parent
             }
 
             if (currentScope == null || currentScope !is TmiStateProvider)
-                throw NoIrcStateHandlerException()
+                throw NoTmiStateHandlerException()
 
             currentScope
         }
@@ -97,6 +95,6 @@ inline fun TwitchScope.container(block: Container.() -> Unit) =
     Container(this, coroutineContext).apply(block)
 
 /** Thrown when no parent is IrcStateProvider */
-class NoIrcStateHandlerException : Exception("No parent of TwitchContainer provides IrcState (implements IrcStateProvider)")
+class NoTmiStateHandlerException : Exception("No parent of TwitchContainer provides IrcState (implements TmiStateProvider)")
 /** Thrown when added [TwitchPlugin] already exist in [Container] */
 class PluginAlreadyExistsException(name: String) : Exception("Plugin with name $name already exists in this container")

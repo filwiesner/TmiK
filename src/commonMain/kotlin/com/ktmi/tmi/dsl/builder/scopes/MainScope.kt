@@ -1,11 +1,12 @@
-package com.ktmi.tmi.dsl.builder
+package com.ktmi.tmi.dsl.builder.scopes
 
 import com.ktmi.irc.IrcState
 import com.ktmi.irc.RawMessage
 import com.ktmi.irc.TwitchIRC
 import com.ktmi.tmi.client.TmiClient
 import com.ktmi.tmi.client.events.asTwitchMessageFlow
-import com.ktmi.tmi.dsl.plugins.Container
+import com.ktmi.tmi.dsl.builder.Container
+import com.ktmi.tmi.dsl.builder.TwitchDsl
 import com.ktmi.tmi.messages.TwitchMessage
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers

@@ -5,7 +5,7 @@ import com.ktmi.irc.IrcState
 import com.ktmi.irc.IrcState.CONNECTED
 import com.ktmi.irc.RawMessage
 import com.ktmi.irc.TwitchIRC
-import com.ktmi.tmi.dsl.builder.TmiStateProvider
+import com.ktmi.tmi.dsl.builder.scopes.TmiStateProvider
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
