@@ -71,11 +71,10 @@ kotlin {
 bintray {
     user = project.hasProperty('btUser') ? btUser : "N/A"
     key = project.hasProperty('btKey') ? btKey : "N/A"
-    pckg = project.hasProperty('btPackage') ? btPackage : "N/A"
 
     pkg {
         repo = 'maven'
-        name = pckg//'TmiK-experimental'
+        name = project.hasProperty('btPackage') ? btPackage : "N/A"
         licenses = ['MIT']
         vcsUrl = 'https://github.com/wooodenleg/TmiK.git'
         issueTrackerUrl = 'https://github.com/wooodenleg/TmiK/issues'
