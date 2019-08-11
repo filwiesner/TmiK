@@ -16,7 +16,7 @@ import kotlin.coroutines.CoroutineContext
 class FilterScope(
     parent: TwitchScope,
     coroutineContext: CoroutineContext
-) : TwitchScope(parent,coroutineContext + CoroutineName("UserTwitch")) {
+) : TwitchScope(parent,coroutineContext + CoroutineName("FilterTwitch")) {
     private var predicate: (suspend (TwitchMessage) -> Boolean) = { true }
 
     /**

@@ -5,7 +5,6 @@ import com.ktmi.tmi.dsl.builder.TwitchDsl
 import com.ktmi.tmi.dsl.builder.TwitchScope
 import com.ktmi.tmi.messages.TwitchMessage
 import com.ktmi.tmi.messages.asChannelName
-import com.ktmi.tmi.messages.channelAsUsername
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.flow.Flow
 import kotlin.coroutines.CoroutineContext
@@ -30,11 +29,3 @@ class ChannelScope(
 @TwitchDsl
 inline fun TwitchScope.channel(channel: String, block: ChannelScope.() -> Unit) =
     ChannelScope(channel, this, coroutineContext).apply(block)
-
-/**
- * [TwitchDsl] builder function for [ChannelScope] what creates [UserScope] with channel broadcaster as filter
- * @param block body of the DSL ([ChannelScope])
- */
-@TwitchDsl
-inline fun ChannelScope.broadcaster(block: UserScope.() -> Unit) =
-    UserScope(channel.channelAsUsername, this, coroutineContext).apply(block)

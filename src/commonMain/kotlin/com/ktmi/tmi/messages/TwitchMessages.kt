@@ -26,9 +26,11 @@ interface UserStateRelated {
     val color: String?
     val username: String? get() = displayName?.toLowerCase()
     val displayName: String?
-    val isMod: Boolean
 }
-
+val UserStateRelated.isBroadcaster get() = badges?.containsKey("broadcaster") == true
+val UserStateRelated.isMod get() = badges?.containsKey("moderator") == true
+val UserStateRelated.isSubscriber get() = badges?.containsKey("subscriber") == true
+val UserStateRelated.isModOrBroadcaster get() = isMod || isBroadcaster
 
 
 private val TwitchMessage._channel get() = rawMessage.channel
@@ -115,7 +117,6 @@ class UserStateMessage(
     override val displayName get() = _displayName
     val emoteSets get() = _emoteSets
         ?: throw CorruptedMessageException(rawMessage, "emote sets are not available")
-    override val isMod get() = _isMod
 }
 
 /**
@@ -154,7 +155,6 @@ class TextMessage(
     val emotes get() = _emotes
     val messageId get() = _id
         ?: throw CorruptedMessageException(rawMessage, "id is not available")
-    override val isMod get() = _isMod
     val timestamp get() = _timestamp
         ?: throw CorruptedMessageException(rawMessage, "timestamp is not available")
     val userId get() = _userId
@@ -237,7 +237,6 @@ open class UserNoticeMessage(
     /** The name of the user who sent the notice */
     override val username get() = _login
         ?: throw CorruptedMessageException(rawMessage, "login not available")
-    override val isMod get() = _isMod
     val noticeId get() = _messageId
         ?: throw CorruptedMessageException(rawMessage, "message id (noticeId) not available")
     val roomId get() = _roomId

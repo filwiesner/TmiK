@@ -1,4 +1,4 @@
-package com.ktmi.tmi.client.commands
+package com.ktmi.tmi.commands
 
 import com.ktmi.tmi.dsl.builder.TwitchScope
 
@@ -9,6 +9,15 @@ import com.ktmi.tmi.dsl.builder.TwitchScope
  */
 fun TwitchScope.action(channel: String, message: String) =
     sendMessage(channel, "/me $message")
+
+/**
+ * This command will send private/direct message to specified user via given channel (channel name is not important but it must be name of connected channel)
+ * @param channel Channel where this command should be executed
+ * @param username Username of user which should receive the message
+ * @param message Message that should be sent to specified user
+ */
+fun TwitchScope.whisper(channel: String, username: String, message: String) =
+    sendMessage(channel, "/w $username $message")
 
 /**
  * This command will allow you to permanently ban a user from the chat room.

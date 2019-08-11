@@ -3,6 +3,7 @@
 package com.ktmi.tmi.client.events
 
 import com.ktmi.tmi.dsl.builder.*
+import com.ktmi.tmi.events.onTwitchMessage
 import com.ktmi.tmi.messages.*
 
 /** Registers a listener for [UserNoticeMessage] with specified notice id */

@@ -10,7 +10,7 @@ repositories {
 }
 
 group 'com.tmik'
-version '0.0.8'
+version '0.0.9'
 
 apply plugin: 'maven-publish'
 
@@ -74,7 +74,7 @@ bintray {
 
     pkg {
         repo = 'maven'
-        name = 'TmiK'
+        name = project.hasProperty('btPackage') ? btPackage : "N/A"
         licenses = ['MIT']
         vcsUrl = 'https://github.com/wooodenleg/TmiK.git'
         issueTrackerUrl = 'https://github.com/wooodenleg/TmiK/issues'
