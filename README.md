@@ -16,26 +16,22 @@ Example of simple bot
 tmi(token) {
     + Reconnect(5) // Tries to reconnect for five times if network fails (and re-joins all channels)
 
-    onRoomState { println("Joined $channel") }
+    channel("MyChannel") {
 
-    channel("mychannel") {
+        onMessage {
+            println("Message from channel $channel received: $text")
+        }
 
-        broadcaster { // Filters only events by/for broadcaster
+        moderators {
             onMessage {
-                if (text == "hello")
-                    action("Hello ${message.displayName}")
+                if (text == "!uptime")
+                    sendMessage("$channel has been streaming for X minutes")
             }
         }
 
-        filterUserState {
-            // Filters events that are not by/for moderators
-            withPredicate { !it.isMod }
-
-            onMessage {
-                if (text.contains("bannedword")) {
-                    sendMessage("Hey, you can't use that word @${message.displayName}!")
-                    timeout()
-                }
+        subscribers {
+            onSubGift {
+                sendMessage("Awwww, subs giving subs <3")
             }
         }
 
@@ -56,8 +52,8 @@ repositories {
 }
 
 dependencies {
-    implementation "com.tmik:TmiK-jvm:0.0.9-exp3" // For JVM
+    implementation "com.tmik:TmiK-jvm:0.0.9" // For JVM
     // OR
-    implementation "com.tmik:TmiK-js:0.0.9-exp3" // For JS
+    implementation "com.tmik:TmiK-js:0.0.9" // For JS
 }
 ```

@@ -10,7 +10,7 @@ repositories {
 }
 
 group 'com.tmik'
-version '0.0.9-exp3'
+version '0.0.9'
 
 apply plugin: 'maven-publish'
 
