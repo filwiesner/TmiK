@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module version="4">
+  <component name="ExternalSystem" externalSystemModuleType="sourceSet" />
   <component name="FacetManager">
     <facet type="kotlin-language" name="Kotlin">
-      <configuration version="3" platform="JavaScript " useProjectSettings="false" isTestModule="false" externalProjectId="TmiK">
+      <configuration version="3" platform="JavaScript " allPlatforms="JS []" useProjectSettings="false" isTestModule="false" externalProjectId="TmiK">
         <sourceSets>
           <sourceSet>com.tmik.TmiK.commonMain</sourceSet>
         </sourceSets>

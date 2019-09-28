@@ -2,7 +2,9 @@ package com.ktmi.tmi.events
 
 import com.ktmi.tmi.commands.*
 import com.ktmi.tmi.dsl.builder.TwitchScope
+import com.ktmi.tmi.messages.TextMessage
 import com.ktmi.tmi.messages.TwitchMessage
+import com.ktmi.tmi.messages.isMod
 
 /**
  * Context of received message that exposes helper functions for channel it's received from
@@ -161,3 +163,7 @@ open class UserContext<T: TwitchMessage>(
             unvip(username)
     }
 }
+
+val UserContext<TextMessage>.isSubscriber get() = message.badges?.containsKey("subscriber") == true
+val UserContext<TextMessage>.displayName get() = message.displayName
+val UserContext<TextMessage>.isMod get() = message.isMod
