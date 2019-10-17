@@ -1,8 +1,11 @@
 package com.ktmi.tmi.dsl.builder.scopes
 
+import com.ktmi.tmi.dsl.builder.Container
 import com.ktmi.tmi.dsl.builder.TwitchDsl
 import com.ktmi.tmi.dsl.builder.TwitchScope
+import com.ktmi.tmi.dsl.builder.container
 import com.ktmi.tmi.dsl.builder.scopes.filters.filterUserState
+import com.ktmi.tmi.dsl.plugins.ThrottleOut
 import com.ktmi.tmi.events.UserContext
 import com.ktmi.tmi.messages.TextMessage
 import com.ktmi.tmi.messages.isBroadcaster
@@ -205,6 +208,16 @@ inline fun CommandScope.moderators(includingBroadcaster: Boolean = true, block: 
     filterUserState {
         withPredicate { it.isMod || (includingBroadcaster && it.isBroadcaster)}
         CommandScope(this@moderators.cmdMark, this@moderators.pattern, this, coroutineContext)
+            .apply(block)
+    }
+}
+
+/** Creates [Container] and applies [ThrottleOut] plugin to it  [CommandScope]  */
+@TwitchDsl
+inline fun CommandScope.throttleOut(ms: Long, block: CommandScope.() -> Unit) {
+    container {
+        + ThrottleOut(ms)
+        CommandScope(this@throttleOut.cmdMark, this@throttleOut.pattern, this, coroutineContext)
             .apply(block)
     }
 }

@@ -52,8 +52,8 @@ repositories {
 }
 
 dependencies {
-    implementation "com.tmik:TmiK-jvm:0.1.0-exp1" // For JVM
+    implementation "com.tmik:TmiK-jvm:0.1.0-exp2" // For JVM
     // OR
-    implementation "com.tmik:TmiK-js:0.1.0-exp1" // For JS
+    implementation "com.tmik:TmiK-js:0.1.0-exp2" // For JS
 }
 ```
