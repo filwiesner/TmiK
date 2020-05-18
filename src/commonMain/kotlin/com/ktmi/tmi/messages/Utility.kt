@@ -57,7 +57,7 @@ fun String.parseTwitchPairSet() = this
  * in the [TextMessage.message]
  */
 data class Emote(
-    val id: Int,
+    val id: String,
     val positions: List<Pair<Int, Int>>
 )
 
@@ -70,7 +70,7 @@ fun String.parseTwitchEmotes() = this
     .map { it.split(":") }
     .filter { it.size == 2 }
     .map { emote -> Emote(
-        emote[0].toInt(),
+        emote[0],
         emote[1].split(",")
             .map { it.split("-") }
             .map { it[0].toInt() to it[1].toInt() }
