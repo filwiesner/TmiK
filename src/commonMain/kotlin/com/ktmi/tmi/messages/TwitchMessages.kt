@@ -22,7 +22,7 @@ sealed class TwitchMessage(
 interface UserStateRelated {
     val channel: String
     val badgeInfo: String?
-    val badges: Map<String, Int>?
+    val badges: Map<String, String>?
     val color: String?
     val username: String? get() = displayName?.toLowerCase()
     val displayName: String?
