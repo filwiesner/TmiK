@@ -80,7 +80,7 @@ bintray {
         issueTrackerUrl = 'https://github.com/wooodenleg/TmiK/issues'
 
         version {
-            name = project.version
+            name = project.hasProperty('btVersion') ? btVersion : project.version
             released = new Date()
             vcsTag = project.version
         }
