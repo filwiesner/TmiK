@@ -5,8 +5,8 @@ name: Gradle Package stable
 
 on:
   push:
-    branches: 
-      - release/stable
+    tags: 
+      - release/stable/*
 
 jobs:
   build:
@@ -21,6 +21,10 @@ jobs:
         java-version: 1.8
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
+        
+    - name: Get version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/ | cut -d "/" -f 3}
 
     - name: Publish locally (generating metadata for the upload)
       run: gradle publishToMavenLocal
@@ -31,3 +35,4 @@ jobs:
         btUser: ${{ secrets.BINTRAY_USER }}
         btKey: ${{ secrets.BINTRAY_KEY }}
         btPackage: ${{ secrets.BINTRAY_PACKAGE_STABLE }}
+        btVersion: ${{ steps.get_version.outputs.VERSION }}
