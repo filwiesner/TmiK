@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module version="4">
+  <component name="ExternalSystem" externalSystemModuleType="sourceSet" />
   <component name="FacetManager">
     <facet type="kotlin-language" name="Kotlin">
-      <configuration version="3" platform="Common (experimental) " useProjectSettings="false" isTestModule="true" externalProjectId="TmiK">
+      <configuration version="3" platform="Common (experimental) " allPlatforms="JS []/JVM [1.6]/Native []" useProjectSettings="false" isTestModule="true" externalProjectId="TmiK">
         <newMppModelJpsModuleKind>SOURCE_SET_HOLDER</newMppModelJpsModuleKind>
         <compilerSettings />
         <compilerArguments>
@@ -28,4 +29,5 @@
       </configuration>
     </facet>
   </component>
+  <component name="TestModuleProperties" production-module="com.tmik.TmiK.commonMain" />
 </module>

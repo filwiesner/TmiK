@@ -1,5 +1,5 @@
 plugins {
-    id 'kotlin-multiplatform' version '1.3.40'
+    id 'kotlin-multiplatform' version '1.3.50'
     id "com.jfrog.bintray" version "1.8.4"
     id 'maven-publish'
 }
@@ -10,13 +10,12 @@ repositories {
 }
 
 group 'com.tmik'
-version '0.0.9'
+version '0.1.0-exp3'
 
 apply plugin: 'maven-publish'
 
 kotlin {
-    ext.ktor_version = '1.2.1'
-    ext.coroutines_version = "1.3.0-M1"
+    ext.coroutines_version = "1.3.2"
 
     jvm()
     js {
