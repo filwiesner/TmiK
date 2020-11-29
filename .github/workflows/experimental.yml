@@ -30,7 +30,9 @@ jobs:
       run: gradle publishToMavenLocal
 
     - name: Publish Packages
-      run: gradle bintrayUpload
+      run: |
+        echo Publishing version ${{ steps.get_version.outputs.VERSION }}
+        gradle bintrayUpload --debug
       env:
         btUser: ${{ secrets.BINTRAY_USER }}
         btKey: ${{ secrets.BINTRAY_KEY }}
