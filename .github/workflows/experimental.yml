@@ -29,7 +29,6 @@ jobs:
     - name: Publish Packages
       run: |
         echo Publishing version ${{ steps.get_version.outputs.VERSION }}
-        gradle publishToMavenLocal
         gradle bintrayUpload
       env:
         btUser: ${{ secrets.BINTRAY_USER }}
