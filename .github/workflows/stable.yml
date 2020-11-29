@@ -24,8 +24,8 @@ jobs:
         
     - name: Get version
       id: get_version
-      run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/ | cut -d "/" -f 3}
-
+      run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 5)
+      
     - name: Publish locally (generating metadata for the upload)
       run: gradle publishToMavenLocal
 
