@@ -28,6 +28,8 @@ jobs:
 
     - name: Publish locally (generating metadata for the upload)
       run: gradle publishToMavenLocal
+      env:
+        btVersion: ${{ steps.get_version.outputs.VERSION }}
 
     - name: Publish Packages
       run: |
