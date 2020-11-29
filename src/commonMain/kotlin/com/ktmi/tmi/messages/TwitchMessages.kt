@@ -57,6 +57,35 @@ private val TwitchMessage._messageId get() = rawMessage.tags["msg-id"]
 private val TwitchMessage._targetMessageId get() = rawMessage.tags["target-msg-id"]
 private val TwitchMessage._systemMessage get() = rawMessage.tags["system-msg"]
 
+
+/* Messages for missing required parts of the message*/
+
+private const val channelMissingMessage = "channel not available"
+private const val loginMissingMessage = "login not available"
+private const val displayMessageMissingMessage = "display name not available"
+private const val badgeInfoMissingMessage = "badge info not available"
+private const val badgesMissingMessage = "badges not available"
+private const val colorMissingMessage = "color not available"
+private const val emoteSetsMissingMessage = "emote sets not available"
+private const val userIdMissingMessage = "user ID not available"
+private const val isModMissingMessage = "moderator tag not available"
+private const val emoteOnlyMissingMessage = "emote only tag not available"
+private const val r9kMissingMessage = "r9k tag not available"
+private const val roomIdMissingMessage = "room ID not available"
+private const val slowModeMissingMessage = "slow tag not available"
+private const val bitsMissingMessage = "bits not available"
+private const val emotesMissingMessage = "emotes not available"
+private const val idMissingMessage = "ID not available"
+private const val timestampMissingMessage = "timestamp not available"
+private const val textMissingMessage = "message text not available"
+private const val banDurationMissingMessage = "ban duration not available"
+private const val messageIdMissingMessage = "messageId not available"
+private const val targetMessageIdMissingMessage = "target message ID not available"
+private const val systemMessageMissingMessage = "system message not available"
+private const val threadIdMissingMessage = "thread ID not available"
+private const val messageMissingMessage = "message not available"
+
+
 /**
  * Message received on successful login. Contains information about logged user
  * @throws CorruptedMessageException when some property is not present
@@ -70,9 +99,9 @@ class GlobalUserStateMessage(
     val color get() = _color
     val displayName get() = _displayName
     val emoteSets get() = _emoteSets
-        ?: throw CorruptedMessageException(rawMessage, "emote sets are not available")
+        ?: throw CorruptedMessageException(rawMessage, emoteSetsMissingMessage)
     val userId get() = _userId
-        ?: throw CorruptedMessageException(rawMessage, "user id is not available")
+        ?: throw CorruptedMessageException(rawMessage, userIdMissingMessage)
 }
 
 /**
@@ -84,7 +113,7 @@ class JoinMessage(
     rawMessage: RawMessage
 ) : TwitchMessage(rawMessage, "JOIN") {
     val channel get() = _channel
-        ?: throw CorruptedMessageException(rawMessage, "channel not available")
+        ?: throw CorruptedMessageException(rawMessage, channelMissingMessage)
     val username get() = _username
 }
 
@@ -97,7 +126,7 @@ class LeaveMessage(
     rawMessage: RawMessage
 ) : TwitchMessage(rawMessage, "PART") {
     val channel get() = _channel
-        ?: throw CorruptedMessageException(rawMessage, "channel not available")
+        ?: throw CorruptedMessageException(rawMessage, channelMissingMessage)
     val username get() = _username
 }
 
@@ -110,13 +139,13 @@ class UserStateMessage(
     rawMessage: RawMessage
 ) : TwitchMessage(rawMessage, "USERSTATE"), UserStateRelated {
     override val channel get() = _channel
-        ?: throw CorruptedMessageException(rawMessage, "channel not available")
+        ?: throw CorruptedMessageException(rawMessage, channelMissingMessage)
     override val badgeInfo get() = _badgeInfo
     override val badges get() = _badges
     override val color get() = _color
     override val displayName get() = _displayName
     val emoteSets get() = _emoteSets
-        ?: throw CorruptedMessageException(rawMessage, "emote sets are not available")
+        ?: throw CorruptedMessageException(rawMessage, emoteSetsMissingMessage)
 }
 
 /**
@@ -128,9 +157,9 @@ class RoomStateMessage(
     rawMessage: RawMessage
 ) : TwitchMessage(rawMessage, "ROOMSTATE") {
     val channel get() = _channel
-        ?:throw CorruptedMessageException(rawMessage, "channel is not available")
+        ?: throw CorruptedMessageException(rawMessage, channelMissingMessage)
     val roomId get() = _roomId
-        ?:throw CorruptedMessageException(rawMessage, "room id is not available")
+        ?: throw CorruptedMessageException(rawMessage, roomIdMissingMessage)
     val emoteOnly get() = _emoteOnly
     val r9k get() = _r9k
     val slowMode get() = _slowMode
@@ -145,7 +174,7 @@ class TextMessage(
     rawMessage: RawMessage
 ) : TwitchMessage(rawMessage, "PRIVMSG"), UserStateRelated {
     override val channel get() = _channel
-    ?: throw CorruptedMessageException(rawMessage, "channel not available")
+        ?: throw CorruptedMessageException(rawMessage, channelMissingMessage)
     override val badgeInfo get() = _badgeInfo
     override val badges get() = _badges
     val bits get() = _bits
@@ -154,13 +183,13 @@ class TextMessage(
     override val displayName get() = _displayName
     val emotes get() = _emotes
     val messageId get() = _id
-        ?: throw CorruptedMessageException(rawMessage, "id is not available")
+        ?: throw CorruptedMessageException(rawMessage, idMissingMessage)
     val timestamp get() = _timestamp
-        ?: throw CorruptedMessageException(rawMessage, "timestamp is not available")
+        ?: throw CorruptedMessageException(rawMessage, timestampMissingMessage)
     val userId get() = _userId
-        ?: throw CorruptedMessageException(rawMessage, "user id is not available")
+        ?: throw CorruptedMessageException(rawMessage, userIdMissingMessage)
     val message get() = _text
-        ?: throw CorruptedMessageException(rawMessage, "message is not available")
+        ?: throw CorruptedMessageException(rawMessage, textMissingMessage)
 }
 
 /**
@@ -172,7 +201,7 @@ class ClearChatMessage(
     rawMessage: RawMessage
 ) : TwitchMessage(rawMessage, "CLEARCHAT") {
     val channel get() = _channel
-        ?: throw CorruptedMessageException(rawMessage, "channel not available")
+        ?: throw CorruptedMessageException(rawMessage, channelMissingMessage)
     val banDuration get() = _banDuration
     val bannedUser get() = _text
     val permanent get() = banDuration == null
@@ -187,14 +216,14 @@ class ClearMessage(
     rawMessage: RawMessage
 ) : TwitchMessage(rawMessage, "CLEARMSG") {
     val channel get() = _channel
-        ?: throw CorruptedMessageException(rawMessage, "channel not available")
+        ?: throw CorruptedMessageException(rawMessage, channelMissingMessage)
     /** Name of user who wrote deleted message */
     val username get() = _login
-        ?: throw CorruptedMessageException(rawMessage, "user not available")
+        ?: throw CorruptedMessageException(rawMessage, loginMissingMessage)
     val message get() = _text
-        ?: throw CorruptedMessageException(rawMessage, "message not available")
+        ?: throw CorruptedMessageException(rawMessage, textMissingMessage)
     val targetMessageId get() = _targetMessageId
-        ?: throw CorruptedMessageException(rawMessage, "target message id not available")
+        ?: throw CorruptedMessageException(rawMessage, targetMessageIdMissingMessage)
 }
 
 // TODO Implement HOSTTARGET?
@@ -209,10 +238,10 @@ class NoticeMessage(
     rawMessage: RawMessage
 ) : TwitchMessage(rawMessage, "NOTICE") {
     val channel get() = _channel
-        ?: throw CorruptedMessageException(rawMessage, "channel not available")
+        ?: throw CorruptedMessageException(rawMessage, channelMissingMessage)
     val message get() = _text
     val noticeId get() = _messageId
-        ?: throw CorruptedMessageException(rawMessage, "message id not available")
+        ?: throw CorruptedMessageException(rawMessage, messageIdMissingMessage)
 }
 
 /**
@@ -225,7 +254,7 @@ open class UserNoticeMessage(
     rawMessage: RawMessage
 ) : TwitchMessage(rawMessage, "USERNOTICE"), UserStateRelated {
     override val channel get() = _channel
-        ?: throw CorruptedMessageException(rawMessage, "channel not available")
+        ?: throw CorruptedMessageException(rawMessage, channelMissingMessage)
     val message get() = _text
     override val badgeInfo get() = _badgeInfo
     override val badges get() = _badges
@@ -233,18 +262,18 @@ open class UserNoticeMessage(
     override val displayName get() = _displayName
     val emotes get() = _emotes
     val messageId get() = _id
-        ?: throw CorruptedMessageException(rawMessage, "id not available")
+        ?: throw CorruptedMessageException(rawMessage, idMissingMessage)
     /** The name of the user who sent the notice */
     override val username get() = _login
-        ?: throw CorruptedMessageException(rawMessage, "login not available")
+        ?: throw CorruptedMessageException(rawMessage, loginMissingMessage)
     val noticeId get() = _messageId
-        ?: throw CorruptedMessageException(rawMessage, "message id (noticeId) not available")
+        ?: throw CorruptedMessageException(rawMessage, messageIdMissingMessage)
     val roomId get() = _roomId
-        ?: throw CorruptedMessageException(rawMessage, "room id not available")
+        ?: throw CorruptedMessageException(rawMessage, roomIdMissingMessage)
     val systemMessage get() = _systemMessage
-        ?: throw CorruptedMessageException(rawMessage, "system message not available")
+        ?: throw CorruptedMessageException(rawMessage, systemMessageMissingMessage)
     val timestamp get() = _timestamp
-        ?: throw CorruptedMessageException(rawMessage, "timestamp not available")
+        ?: throw CorruptedMessageException(rawMessage, timestampMissingMessage)
     val userId get() = _userId
 }
 
@@ -261,13 +290,13 @@ class WhisperMessage(
     val displayName get() = _displayName
     val emotes get() = _emotes
     val messageId get() = rawMessage.tags["message-id"]
-        ?: throw CorruptedMessageException(rawMessage, "messageId not available")
+        ?: throw CorruptedMessageException(rawMessage, messageIdMissingMessage)
     val threadId get() = rawMessage.tags["thread-id"]?.toLongOrNull()
-        ?: throw CorruptedMessageException(rawMessage, "threadId not available")
+        ?: throw CorruptedMessageException(rawMessage, threadIdMissingMessage)
     val userId get() = _userId
-        ?: throw CorruptedMessageException(rawMessage, "UserId not available")
+        ?: throw CorruptedMessageException(rawMessage, userIdMissingMessage)
     val message get() = _text
-        ?: throw CorruptedMessageException(rawMessage, "message not available")
+        ?: throw CorruptedMessageException(rawMessage, messageMissingMessage)
     val username get() = _username
 }
 

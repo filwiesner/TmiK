@@ -1,3 +1,3 @@
 package com.ktmi.utils
 
-expect fun getMillis() : Long
+internal expect fun getMillis(): Long

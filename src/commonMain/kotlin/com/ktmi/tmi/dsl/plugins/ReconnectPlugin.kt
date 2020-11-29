@@ -64,7 +64,10 @@ fun Container.Reconnect(attempts: Int = 0, interval: Long = 10_000) = object : T
             else while (true)
                 reconnect()
 
-        } catch (e: CancellationException) {}
+        } catch (e: CancellationException) {
+            println("Reconnect plugin scope cancelled while reconnecting")
+            e.printStackTrace()
+        }
     }
 
     private fun rejoinChannels() { launch {
