@@ -9,9 +9,6 @@ repositories {
     jcenter()
 }
 
-group 'com.tmik'
-version '0.1.0-exp4'
-
 apply plugin: 'maven-publish'
 
 kotlin {
@@ -64,9 +61,27 @@ kotlin {
     }
 }
 
+def GROUP_ID= "com.tmik"
+def ARTIFACT_ID = "TmiK"
+
+afterEvaluate {
+    project.publishing.publications.all {
+        // rename artifacts
+        groupId = GROUP_ID
+        if (it.name.contains('metadata')) {
+            artifactId = "$ARTIFACT_ID"
+        } else {
+            artifactId = "$ARTIFACT_ID-$name"
+        }
+    }
+}
+
+
 bintray {
     user = System.getenv('btUser') ?: "N/A"
     key = System.getenv('btKey') ?: "N/A"
+
+    override = true
 
     pkg {
         repo = 'maven'
@@ -76,16 +91,23 @@ bintray {
         issueTrackerUrl = 'https://github.com/wooodenleg/TmiK/issues'
 
         version {
-            name = System.getenv('btVersion') ?: project.version
+            name = System.getenv('btVersion')
+            vcsTag = System.getenv('btVersion')
             released = new Date()
-            vcsTag = project.version
         }
     }
 }
 
+publishToMavenLocal.doFirst {
+    project.version = System.getenv('btVersion')
+}
+
 bintrayUpload.doFirst {
-    publications = project.publishing.publications.findAll { !it.name.contains('-test') }.collect {
-        println("Uploading artifact '$it.groupId:$it.artifactId:$it.version' from publication '$it.name'")
+    publications = publishing.publications.collect {
         it.name
+    }.findAll {
+        it != "kotlinMultiplatform"
     }
 }
+
+bintrayUpload.dependsOn publishToMavenLocal

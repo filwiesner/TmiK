@@ -63,6 +63,11 @@ abstract class IrcClient(
     override val states: SharedFlow<IrcState> get() = stateFlow
 
     protected var state: IrcState = IrcState.DISCONNECTED
+        set(value) {
+            field = value
+            launch { stateFlow.emit(state) }
+        }
+
     override val currentState: IrcState
         get() = state
 
@@ -86,12 +91,12 @@ abstract class IrcClient(
     }
 
     protected fun onConnectionOpened() {
-        setState(IrcState.CONNECTING)
+        state = IrcState.CONNECTING
         authorize(token, username)
     }
 
     protected fun onClosed() {
-        setState(IrcState.DISCONNECTED)
+        state = IrcState.DISCONNECTED
     }
 
     protected fun onMessageReceived(message: String) {
@@ -99,7 +104,7 @@ abstract class IrcClient(
             sendMessage("PONG :tmi.twitch.tv")
         else {
             if (message.startsWith(":tmi.twitch.tv 001"))
-                setState(IrcState.CONNECTED)
+                state = IrcState.CONNECTED
 
             launch {
                 for (line in message.trim().lines())
@@ -111,11 +116,6 @@ abstract class IrcClient(
 
 
     // === Private methods ==
-
-    private fun setState(state: IrcState) {
-        this.state = state
-        launch { stateFlow.emit(state) }
-    }
 
     private val String.isMessageIgnored: Boolean
         get() {

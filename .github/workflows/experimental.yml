@@ -26,11 +26,6 @@ jobs:
       id: get_version
       run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 5)
 
-    - name: Publish locally (generating metadata for the upload)
-      run: gradle publishToMavenLocal
-      env:
-        btVersion: ${{ steps.get_version.outputs.VERSION }}
-
     - name: Publish Packages
       run: |
         echo Publishing version ${{ steps.get_version.outputs.VERSION }}
