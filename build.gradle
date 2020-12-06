@@ -98,8 +98,10 @@ bintray {
     }
 }
 
-publishToMavenLocal.doFirst {
-    project.version = System.getenv('btVersion')
+task initProject {
+    println "Initializing project ${GROUP_ID}:${System.getenv('btVersion')}"
+    version System.getenv('btVersion')
+    group GROUP_ID
 }
 
 bintrayUpload.doFirst {
@@ -110,4 +112,5 @@ bintrayUpload.doFirst {
     }
 }
 
+publishToMavenLocal.dependsOn initProject
 bintrayUpload.dependsOn publishToMavenLocal
