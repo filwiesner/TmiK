@@ -1,6 +1,3 @@
-# This workflow will build a package using Gradle and then publish it to GitHub packages when a release is created
-# For more information see: https://github.com/actions/setup-java#publishing-using-gradle
-
 name: Gradle Package stable
 
 on:
@@ -25,12 +22,11 @@ jobs:
     - name: Get version
       id: get_version
       run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 5)
-      
-    - name: Publish locally (generating metadata for the upload)
-      run: gradle publishToMavenLocal
 
     - name: Publish Packages
-      run: gradle bintrayUpload
+      run: |
+        echo Publishing version ${{ steps.get_version.outputs.VERSION }}
+        gradle bintrayUpload
       env:
         btUser: ${{ secrets.BINTRAY_USER }}
         btKey: ${{ secrets.BINTRAY_KEY }}
