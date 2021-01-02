@@ -1,14 +1,17 @@
 package com.ktmi.tmi.client
 
-import com.ktmi.irc.IRC
 import com.ktmi.irc.IrcState
 import com.ktmi.irc.IrcState.CONNECTED
 import com.ktmi.irc.RawMessage
 import com.ktmi.irc.TwitchIRC
+import com.ktmi.irc.initIrcClient
 import com.ktmi.tmi.dsl.builder.scopes.TmiStateProvider
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -18,41 +21,34 @@ import kotlin.coroutines.CoroutineContext
  * @param context [CoroutineContext] that should be used fro receiving messages from [TwitchIRC]
  * @param irc Implementation of [TwitchIRC] used for communication with Twitch
  */
-class TmiClient (
+class TmiClient(
     token: String,
     username: String = "blank",
     secure: Boolean = true,
     context: CoroutineContext = Dispatchers.Default,
-    private val irc: TwitchIRC = IRC(token, username, secure, context)
+    private val irc: TwitchIRC = initIrcClient(token, username, secure, context)
 ) : TmiStateProvider, CoroutineScope by CoroutineScope(context) {
-
-    private val messagesFlowDispenser = FlowDispenser(irc.messages, context)
-    private val stateFlowDispenser = FlowDispenser(irc.states, context)
 
     private var clientUsername: String? = null
 
-    init { launch {
-        try { raw.collect {
-            if (it.commandName == "001") {
-                clientUsername = it.channel
-                cancel()
-            }
-        } } catch (e: CancellationException) { }
-    } }
+    init {
+        launch {
+            val message = raw.filter {
+                it.commandName == "001"
+            }.first()
+            clientUsername = message.channel
+        }
+    }
 
     override val username: String get() = clientUsername ?: "unknown"
 
     /** Connects to [TwitchIRC] */
     override fun connect() {
         irc.connect()
-        messagesFlowDispenser.initialize()
-        stateFlowDispenser.initialize()
     }
 
     /** Disconnects from [TwitchIRC] */
     override fun disconnect() {
-        messagesFlowDispenser.stop()
-        stateFlowDispenser.stop()
         irc.disconnect()
     }
 
@@ -70,11 +66,12 @@ class TmiClient (
 
     // == Elementary events ==
     /** [Flow] of [RawMessage]s received from [TwitchIRC]*/
-    val raw get() = messagesFlowDispenser.requestFlow()
+    val raw: Flow<RawMessage>
+        get() = irc.messages
 
     /** [Flow] of [IrcState] events received from [TwitchIRC] */
     override val connectionStatus: Flow<IrcState>
-        get() = stateFlowDispenser.requestFlow()
+        get() = irc.states
 
 }
 
